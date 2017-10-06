@@ -11,4 +11,4 @@ __pycache__/
 
 # Javascript and React
 bundle.js
-
+node_modules/

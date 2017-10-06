@@ -3,18 +3,20 @@
 import os
 
 import logging
-from flask import Flask
+from flask import Flask, render_template
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(import_name=__name__,
+            static_url_path="/static",
+            static_folder="./../../frontend/static/")
 CORS(app)
 
 
 @app.route("/")
-def hello():
-    return "hello world!"
+def index():
+    return render_template('index.html')
 
 
 app_settings = os.getenv('APP_SETTINGS', 'server.config.DevelopmentConfig')

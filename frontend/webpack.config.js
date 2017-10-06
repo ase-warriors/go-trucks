@@ -1,15 +1,15 @@
 module.exports = {
   entry: './src/app.jsx',
   output: {
-    filename: './src/static/bundle.js'
+    filename: './static/bundle.js'
   },
   module: {
     loaders: [
       {
-        test: /\.jsx$/,
+        test: /\.js.$/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015', 'react']
+          presets: ['es2015', 'react', 'env']
         }
       }
     ]
