@@ -1,7 +1,14 @@
 # Mac
 .DS_Store
+
+# IDE
+.tern-port
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Javascript and React
+bundle.js
 
