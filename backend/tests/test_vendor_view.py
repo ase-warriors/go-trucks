@@ -24,37 +24,33 @@ class TestVendorBlueprint(BaseTestCase):
 	    data = json.loads(response.data.decode())
 	    self.assertEqual(response.status_code, 200)
 	    self.assertEqual(len(data), 2)
- 
+
     def test_registration(self):
         with self.client:
             response = self.register_vendor('test@gmail.com', 'pwd')
-            self.assertEqual(response.status_code, 201) 
+            self.assertEqual(response.status_code, 201)
 
     def test_repeated_registration(self):
-	vendor = Vendor(
-	    email="test1@gmail.com",
-	    password="test1"
-	)
-	db.session.add(vendor)
-	db.session.commit()
+        vendor = Vendor(
+	        email="test1@gmail.com",
+	        password="test1"
+        )
+        db.session.add(vendor)
+        db.session.commit()
 
         with self.client:
             response = self.register_vendor(vendor.email, "pwd")
-            self.assertEqual(response.status_code, 202) 
+            self.assertEqual(response.status_code, 202)
 
 
-   
+
     def register_vendor(self, email, password):
         return self.client.post(
-	    "/vendor/",
-	    data=json.dumps(dict(
-	        email=email,
-	        password=password
-	    )),
-      	    content_type='application/json',
-        )
+            "/vendor/",
+            data=dict(email=email,
+                      password=password))
 
 
 if __name__ == "__main__":
     unittest.main()
- 
+

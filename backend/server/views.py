@@ -30,8 +30,8 @@ class VendorsAPI(MethodView):
         return json_response(res, 200)
 
     def post(self):
-        post_data = request.json
-        if Vendor.vendor_exists(post_data.get('email')):
+        post_data = request.form
+        if Vendor.get_vendor_by_email(post_data.get('email')) != None:
             res = {"status": "failure", "message": "User already exists."}
             return json_response(res, 202)
 

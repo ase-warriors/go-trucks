@@ -8,9 +8,10 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-app = Flask(import_name=__name__,
-            static_url_path="/static",
-            static_folder="./../../frontend/static/")
+app = Flask(
+    import_name=__name__,
+    static_url_path="/static",
+    static_folder="./../../frontend/static/")
 CORS(app)
 
 
@@ -27,4 +28,6 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
 from views import vendor_bp
+from auth import auth_bp
 app.register_blueprint(vendor_bp)
+app.register_blueprint(auth_bp)
