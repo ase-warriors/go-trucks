@@ -6,6 +6,7 @@ def auth_policy(request):
     # TODO(amy): change to middleware/decorator
     unkown_policy = {"role": "unknown"}
     auth_header = request.headers.get("Authorization")
+    print "Auth token: ", auth_header
     if auth_header:
         try:
             auth_token = auth_header.split(" ")[0]

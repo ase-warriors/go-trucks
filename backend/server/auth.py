@@ -24,6 +24,7 @@ class LoginAPI(MethodView):
                         'message': 'Successfully logged in.',
                         'auth_token': auth_token.decode()
                     }
+                    print "Login response:", res
                     return make_response(jsonify(res)), 200
             else:
                 res = {'status': 'failure', 'message': 'User does not exist.'}
