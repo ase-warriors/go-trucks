@@ -6,13 +6,44 @@ const Login= require('./login.jsx');
 
 class Home extends React.Component {
   constructor() {
-        super();
+    super();
+    this.state = {
+      login: ""
+    };
+    this.userLogin = this.userLogin.bind(this);
+    this.onClickLogout = this.onClickLogout.bind(this);
   }
   componentDidMount() {
+
+  }
+
+  userLogin(token) {
+    this.setState({
+      login: token
+    });
+  }
+
+  onClickLogout() {
+    console.log('loggedout');
+    this.setState({
+      login: "",
+    });
   }
   render() {
+    var logoutItem = null;
+    var actionItems = null;
+    if (this.state.login != "") {
+      logoutItem = (<NavItem onClick={this.onClickLogout} eventKey={4}>Logout</NavItem >);
+      actionItems = (<NavDropdown eventKey={3} title="Actions" id="basic-nav-dropdown">
+                     <MenuItem eventKey={3.1}>Create Posting</MenuItem>
+                     <MenuItem eventKey={3.2}>Modify Posting</MenuItem>
+                     <MenuItem divider />
+                     <MenuItem eventKey={3.3}>Edit Profile</MenuItem>
+                     </NavDropdown>);
+    }
+
     const navbarInstance = (
-      <Navbar>
+      <Navbar onClick={this.onNavBarEvent}>
         <Navbar.Header>
           <Navbar.Brand>
             <a href="#">Go Trucks</a>
@@ -20,24 +51,30 @@ class Home extends React.Component {
         </Navbar.Header>
         <Nav>
           <NavItem eventKey={1} href="#">Home</NavItem>
-          <NavDropdown eventKey={3} title="Actions" id="basic-nav-dropdown">
-            <MenuItem eventKey={3.1}>Create Posting</MenuItem>
-            <MenuItem eventKey={3.2}>Modify Posting</MenuItem>
-            <MenuItem eventKey={3.3}>Edit Profile</MenuItem>
-            <MenuItem divider />
-            <MenuItem eventKey={3.4}>Separated link</MenuItem>
-          </NavDropdown>
+          {actionItems}
           <NavItem eventKey={2} href="#">About</NavItem>
+          {logoutItem}
         </Nav>
       </Navbar>
     );
-    const loginPage = (<Login />);
-    return (
-      <div>
-        <div>{navbarInstance}</div>
-        <div>{loginPage}</div>
-      </div>
-    );
+    const loginPage = (<Login
+                       userLogin={this.userLogin}
+                       />);
+    if (this.state.login == "") {
+      return (
+        <div>
+          <div>{navbarInstance}</div>
+          <div>{loginPage}</div>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <div>{navbarInstance}</div>
+          <div>You are logged in with token{this.state.login}</div>
+        </div>
+      );
+    }
   }
 }
 

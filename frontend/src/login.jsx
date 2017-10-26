@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
-
+const d3 = require("d3");
 
 class Login extends React.Component {
   constructor(props) {
@@ -25,8 +25,23 @@ class Login extends React.Component {
   };
 
   handleSubmit(event) {
+    d3.request("/auth/login")
+      .header("X-Requested-With", "XMLHttpRequest")
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .post(`email=${this.state.email}&password=${this.state.password}`, (res) => {
+        console.log(res.response)
+        const parsedMessage = JSON.parse(res.response);
+        console.log(parsedMessage)
+        if (parsedMessage.status == "success") {
+          this.props.userLogin(parsedMessage.auth_token);
+        } else {
+          console.log('login failed');
+        }
+      });
+
+ 
     event.preventDefault();
-  };
+  }
 
   render() {
     return (
