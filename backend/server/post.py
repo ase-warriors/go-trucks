@@ -32,7 +32,7 @@ class PostsAPI(MethodView):
         policy = auth_policy(request)
         if policy["role"] != "vendor":
             res = {"status": "failure", "message": "User not authorized."}
-            return json_response(res)
+            return json_response(res, 401)
 
         post_data = request.form
         post = Post.add_post(policy.get("vendor_id"), post_data)
