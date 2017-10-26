@@ -11,6 +11,7 @@ auth_bp = Blueprint('auth', __name__)
 class LoginAPI(MethodView):
     def post(self):
         post_data = request.form
+        print "Login: ", request, post_data
         try:
             email = post_data.get('email')
             password = post_data.get('password')
