@@ -1,31 +1,44 @@
-const React = require('react');
-const { AppBar, Button }= require('material-ui');
+import React from 'react';
+const { Button } = require('react-bootstrap');
+const { Navbar, Nav, NavItem, MenuItem, NavDropdown } = require('react-bootstrap')
 
-const d3 = require('d3');
+const Login= require('./login.jsx');
 
 class Home extends React.Component {
-    constructor() {
+  constructor() {
         super();
-        this.state = {
-            entries: 0,
-        };
-        this.addEntry = this.addEntry.bind(this);
-    }
-    componentDidMount() {
-    }
-    addEntry() {
-        const current_entries = this.state.entries;
-        this.setState({entries: current_entries+1});
-    }
-    render() {
-      return (
-        <div id="home-component">
-          <AppBar title="hello" />
-          <Button onClick={this.addEntry}>Add Entry</Button>
-          <p>{this.state.entries} entries added</p>
-        </div>
-        );
-    }
+  }
+  componentDidMount() {
+  }
+  render() {
+    const navbarInstance = (
+      <Navbar>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <a href="#">Go Trucks</a>
+          </Navbar.Brand>
+        </Navbar.Header>
+        <Nav>
+          <NavItem eventKey={1} href="#">Home</NavItem>
+          <NavDropdown eventKey={3} title="Actions" id="basic-nav-dropdown">
+            <MenuItem eventKey={3.1}>Create Posting</MenuItem>
+            <MenuItem eventKey={3.2}>Modify Posting</MenuItem>
+            <MenuItem eventKey={3.3}>Edit Profile</MenuItem>
+            <MenuItem divider />
+            <MenuItem eventKey={3.4}>Separated link</MenuItem>
+          </NavDropdown>
+          <NavItem eventKey={2} href="#">About</NavItem>
+        </Nav>
+      </Navbar>
+    );
+    const loginPage = (<Login />);
+    return (
+      <div>
+        <div>{navbarInstance}</div>
+        <div>{loginPage}</div>
+      </div>
+    );
+  }
 }
 
 module.exports = Home;
