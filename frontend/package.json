@@ -18,6 +18,8 @@
   "homepage": "https://github.com/ase-warriors/go-trucks/frontend#readme",
   "dependencies": {
     "d3": "^4.11.0",
+    "material-ui": "^1.0.0-beta.13",
+    "material-ui-icons": "^1.0.0-beta.15",
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.3",
     "react-dom": "^16.0.0"

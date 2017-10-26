@@ -1,5 +1,6 @@
 const React = require('react');
-const Button = require('react-bootstrap').Button;
+const { AppBar, Button }= require('material-ui');
+
 const d3 = require('d3');
 
 class Home extends React.Component {
@@ -17,12 +18,12 @@ class Home extends React.Component {
         this.setState({entries: current_entries+1});
     }
     render() {
-        return (
-            <div id="home-component">
-            <h1>Hello Vendor</h1>
-            <Button onClick={this.addEntry}>Add Entry</Button>
-            <p>{this.state.entries} entries added</p>
-            </div>
+      return (
+        <div id="home-component">
+          <AppBar title="hello" />
+          <Button onClick={this.addEntry}>Add Entry</Button>
+          <p>{this.state.entries} entries added</p>
+        </div>
         );
     }
 }
