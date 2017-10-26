@@ -46,6 +46,7 @@ class Login extends React.Component {
   render() {
     return (
       <div className="Login">
+        <h3>Vendor Login</h3>
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>

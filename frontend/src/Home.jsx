@@ -1,8 +1,8 @@
 import React from 'react';
-const { Button } = require('react-bootstrap');
 const { Navbar, Nav, NavItem, MenuItem, NavDropdown } = require('react-bootstrap')
 
 const Login= require('./login.jsx');
+const Create = require('./create.jsx')
 
 class Home extends React.Component {
   constructor() {
@@ -46,7 +46,7 @@ class Home extends React.Component {
       <Navbar onClick={this.onNavBarEvent}>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#">Go Trucks</a>
+            <a href="/">Go Trucks</a>
           </Navbar.Brand>
         </Navbar.Header>
         <Nav>
@@ -58,8 +58,9 @@ class Home extends React.Component {
       </Navbar>
     );
     const loginPage = (<Login
-                       userLogin={this.userLogin}
-                       />);
+                       userLogin={this.userLogin}/>);
+    const createPage = (<Create token={this.state.login} />);
+
     if (this.state.login == "") {
       return (
         <div>
@@ -71,7 +72,7 @@ class Home extends React.Component {
       return (
         <div>
           <div>{navbarInstance}</div>
-          <div>You are logged in with token{this.state.login}</div>
+          <div>{createPage}</div>
         </div>
       );
     }
