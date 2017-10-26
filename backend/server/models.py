@@ -48,13 +48,13 @@ class Vendor(db.Model):
         vendor = Vendor.query.filter_by(id=vendor_id).first()
         return vendor
 
-    def encode_auth_token(self, user_id):
+    def encode_auth_token(self):
         try:
             payload = {
                 'exp': datetime.datetime.utcnow() + \
                        datetime.timedelta(days=0, seconds=100),
                 'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+                'sub': self.id
             }
             return jwt.encode(
                 payload, app.config.get('SECRET_KEY'), algorithm='HS256')

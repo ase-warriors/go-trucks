@@ -15,7 +15,7 @@ class LoginAPI(MethodView):
             password = post_data.get('password')
             user = Vendor.get_vendor_by_email(email)
             if user and bcrypt.check_password_hash(user.password, password):
-                auth_token = user.encode_auth_token(user.id)
+                auth_token = user.encode_auth_token()
                 if auth_token:
                     res = {
                         'status': 'success',
@@ -37,7 +37,7 @@ class LogoutAPI(MethodView):
         # get auth token
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            auth_token = auth_header.split(" ")[1]
+            auth_token = auth_header.split(" ")[0]
         else:
             auth_token = ''
         if auth_token:
