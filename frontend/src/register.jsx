@@ -3,19 +3,21 @@ import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
 const d3 = require("d3");
 
-class Login extends React.Component {
+class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      repassword: "",
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   validateForm() {
-    return this.state.email.length > 0 && this.state.password.length > 0;
+    console.log(this.state)
+    return this.state.password == this.state.repassword;
   }
 
   handleChange(event) {
@@ -25,20 +27,20 @@ class Login extends React.Component {
   };
 
   handleSubmit(event) {
-    d3.request("/auth/login")
+    d3.request("/vendor/")
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .post(`email=${this.state.email}&password=${this.state.password}`, (res) => {
-
-        if (res == null) {
-          window.alert('incorrect credentials')
+        if(res == null) {
+          window.alert('registeration failure')
           return
         }
         console.log(res.response)
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
-          this.props.userLogin(parsedMessage.auth_token);
+          window.alert('register successful')
+          this.props.finish();
         }
       });
 
@@ -49,7 +51,7 @@ class Login extends React.Component {
   render() {
     return (
       <div className="Login">
-        <h3>Vendor Login</h3>
+        <h3>Vendor Registeration</h3>
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>
@@ -68,13 +70,21 @@ class Login extends React.Component {
               type="password"
             />
           </FormGroup>
+          <FormGroup controlId="repassword" bsSize="large">
+            <ControlLabel>Confirm Password</ControlLabel>
+            <FormControl
+              value={this.state.repassword}
+              onChange={this.handleChange}
+              type="password"
+            />
+          </FormGroup>
           <Button
             block
             bsSize="large"
             disabled={!this.validateForm()}
             type="submit"
           >
-            Login
+            Register
           </Button>
         </form>
       </div>
@@ -82,4 +92,4 @@ class Login extends React.Component {
   }
 }
 
-module.exports = Login
+module.exports = Register
