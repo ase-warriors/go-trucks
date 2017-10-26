@@ -18,12 +18,15 @@ class Create extends React.Component {
     super(props);
     this.state = {
       location: "",
-      time:"0"
+      time:"0",
+      post:null,
     };
     this.handleChange = this.handleChange.bind(this);
     this.onClickSubmit = this.onClickSubmit.bind(this);
+    this.getPosts = this.getPosts.bind(this);
   }
   componentDidMount() {
+    this.getPosts();
   }
   onClickSubmit(event) {
     console.log(this.state);
@@ -37,9 +40,9 @@ class Create extends React.Component {
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
-          this.props.userLogin(parsedMessage.auth_token);
+          this.getPosts();
         } else {
-          console.log('login failed');
+          console.log("post failed")
         }
       });
 
@@ -50,6 +53,24 @@ class Create extends React.Component {
       [event.target.id]: event.target.value
     });
   };
+  getPosts() {
+    d3.request("/post/")
+      .header("X-Requested-With", "XMLHttpRequest")
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .header("Authorization", this.props.token)
+      .get((res) => {
+        console.log(res.response)
+        const parsedMessage = JSON.parse(res.response);
+        console.log(parsedMessage)
+        if (parsedMessage) {
+          this.setState({
+            post: parsedMessage
+          });
+        } else {
+          console.log('get posts failed');
+        }
+      });
+  }
   render() {
     const formInstance = (
       <form onSubmit = {this.onClickSubmit}>
@@ -78,6 +99,8 @@ class Create extends React.Component {
     );
     return (
       <div>
+        <h2>Current Postings</h2>
+        <div><p>{JSON.stringify(this.state.post)}</p></div>
         <h2>Create Posting</h2>
         <div>{formInstance}</div>
       </div>
