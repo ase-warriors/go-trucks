@@ -3,44 +3,46 @@ import json
 import unittest
 
 from server import db
-from server.models import Vendor
+from server.models import Vendor, BlacklistToken
 from tests.base import BaseTestCase
-
-def create_test_vendor():
-    email="test1@gmail.com"
-    password = "test1"
-    vendor = Vendor(email=email, password=password)
-    db.session.add(vendor)
-    db.session.commit()
-    return vendor
 
 class TestAuthBlueprint(BaseTestCase):
     def test_successful_login(self):
-        v = create_test_vendor()
+        v = Vendor.add_vendor(dict(email="test1@gmail.com",
+                                   password="test1"))
         with self.client:
             response = self.login_vendor(v.email, "test1")
             self.assertEqual(response.status_code, 200)
             self.assertTrue('auth_token' in response.json)
 
     def test_failed_login(self):
-        v = create_test_vendor()
+        v = Vendor.add_vendor(dict(email="test1@gmail.com",
+                                   password="test1"))
         with self.client:
             response = self.login_vendor(v.email, "wrongpassword")
             self.assertEqual(response.status_code, 404)
             self.assertFalse('auth_token' in response.json)
 
     def test_successful_logout(self):
-        v = create_test_vendor()
+        v = Vendor.add_vendor(dict(email="test1@gmail.com",
+                                   password="test1"))
         token = v.encode_auth_token()
         with self.client:
             response = self.logout_vendor(token)
             self.assertEqual(response.status_code, 200)
+            self.assertTrue(BlacklistToken.check_blacklist(token))
 
     def test_failed_logout(self):
         token = "wrongtoken"
         with self.client:
             response = self.logout_vendor(token)
             self.assertEqual(response.status_code, 401)
+            self.assertFalse(BlacklistToken.check_blacklist(token))
+
+        with self.client:
+            response = self.logout_vendor("")
+            self.assertEqual(response.status_code, 403)
+
 
 
 

@@ -3,27 +3,18 @@ import json
 import unittest
 
 from server import db
-from server.models import Vendor
+from server.models.vendor import Vendor
 from tests.base import BaseTestCase
 
 class TestVendorBlueprint(BaseTestCase):
     def test_get_vendors(self):
-	vendor1 = Vendor(
-	    email="test1@gmail.com",
-	    password="test1"
-	)
-	vendor2 = Vendor(
-	    email="test2@gmail.com",
-	    password="test2"
-	)
-	db.session.add(vendor1)
-	db.session.add(vendor2)
-	db.session.commit()
-	with self.client:
-	    response = self.client.get("/vendor/")
-	    data = json.loads(response.data.decode())
-	    self.assertEqual(response.status_code, 200)
-	    self.assertEqual(len(data), 2)
+    	Vendor.add_vendor(dict(email="test1@gmail.com", password="test1"))
+        Vendor.add_vendor(dict(email="test2@gmail.com", password="test2"))
+    	with self.client:
+            response = self.client.get("/vendor/")
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(data), 2)
 
     def test_registration(self):
         with self.client:
@@ -31,15 +22,9 @@ class TestVendorBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 201)
 
     def test_repeated_registration(self):
-        vendor = Vendor(
-	        email="test1@gmail.com",
-	        password="test1"
-        )
-        db.session.add(vendor)
-        db.session.commit()
-
+    	v = Vendor.add_vendor(dict(email="test1@gmail.com", password="test1"))
         with self.client:
-            response = self.register_vendor(vendor.email, "pwd")
+            response = self.register_vendor(v.email, "pwd")
             self.assertEqual(response.status_code, 202)
 
 

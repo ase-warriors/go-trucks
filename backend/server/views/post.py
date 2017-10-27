@@ -1,7 +1,10 @@
+# server/views/post.py
+
 from flask import Blueprint, jsonify, request, make_response
 from flask.views import MethodView
 from server.models import Post
-from utils import auth_policy
+from server.utils import auth_policy
+
 post_bp = Blueprint('post', __name__, url_prefix="/post")
 
 

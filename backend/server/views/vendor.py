@@ -1,8 +1,8 @@
-# server/views.py
+# server/vendor.py
 
 from flask import Blueprint, jsonify, request, make_response
 from flask.views import MethodView
-from server.models import Vendor
+from server.models.vendor import Vendor
 
 vendor_bp = Blueprint('vendor', __name__, url_prefix="/vendor")
 

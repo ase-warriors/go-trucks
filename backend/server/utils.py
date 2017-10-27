@@ -1,4 +1,4 @@
-from views import Vendor
+from server.models import Vendor
 from flask import request
 
 
@@ -9,7 +9,7 @@ def auth_policy(request):
     if auth_header:
         try:
             auth_token = auth_header.split(" ")[0]
-            print ("Auth token:"+auth_token)
+            print("Auth token:" + auth_token)
             if auth_token:
                 resp = Vendor.decode_auth_token(auth_token)
                 if not isinstance(resp, str):

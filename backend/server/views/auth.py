@@ -1,9 +1,10 @@
+# server/views/auth.py
+
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 
-from . import bcrypt, db
+from server import bcrypt, db
 from server.models import Vendor, BlacklistToken
-from utils import auth_policy
 
 auth_bp = Blueprint('auth', __name__)
 
