@@ -42,7 +42,7 @@ class Post(db.Model):
     @staticmethod
     def get_latest_post(vendor_id):
         post = Post.query.filter_by(
-            vendor_id=vendor_id).order_by(Post.posted_on)[1]
+            vendor_id=vendor_id).order_by(Post.posted_on).limit(1)[0]
         return post
 
     @staticmethod

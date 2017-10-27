@@ -31,23 +31,6 @@ class PostsAPI(MethodView):
             })
         return json_response(res, 200)
 
-    def post(self):
-        # TODO(amy): move auth_policy logic outside
-        policy = request.environ.get("policy")
-        app.logger.debug("Post: policy=%s", policy)
-        if policy == None or policy["role"] != "vendor":
-            res = {"status": "failure", "message": "User not authorized."}
-            return json_response(res, 401)
-
-        post_data = request.form
-        post = Post.add_post(policy.get("vendor_id"), post_data)
-        if post:
-            res = {"status": "success", "message": "New post is added."}
-            return json_response(res, 201)
-
-        res = {"status": "failure", "message": "Error occurred"}
-        return json_response(res, 401)
-
 
 posts_view = PostsAPI.as_view("posts_api")
-post_bp.add_url_rule("/", view_func=posts_view, methods=["GET", "POST"])
+post_bp.add_url_rule("/", view_func=posts_view, methods=["GET"])

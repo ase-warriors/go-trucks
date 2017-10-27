@@ -1,0 +1,3 @@
+1. Get /vendor/posts, paramter: n
+2. Get /posts, parameter: location, distance
+3. Convert location to lattitude & longitute of vendor and save in db
