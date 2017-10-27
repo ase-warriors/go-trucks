@@ -5,6 +5,7 @@ from flask.views import MethodView
 
 from server import bcrypt, db
 from server.models import Vendor, BlacklistToken
+from server.middleware import AuthPolicy
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -45,7 +46,7 @@ class LogoutAPI(MethodView):
         else:
             auth_token = ''
         if auth_token:
-            resp = Vendor.decode_auth_token(auth_token)
+            resp = AuthPolicy.decode_auth_token(auth_token)
             if not isinstance(resp, str):
                 # mark the token as blacklisted
                 blacklist_token = BlacklistToken(token=auth_token)

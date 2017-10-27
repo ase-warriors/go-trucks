@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request, make_response
 from flask.views import MethodView
 from server.models import Post
 from server.utils import auth_policy
+from server import app
 
 post_bp = Blueprint('post', __name__, url_prefix="/post")
 
@@ -32,8 +33,9 @@ class PostsAPI(MethodView):
 
     def post(self):
         # TODO(amy): move auth_policy logic outside
-        policy = auth_policy(request)
-        if policy["role"] != "vendor":
+        policy = request.environ.get("policy")
+        app.logger.debug("Post: policy=%s", policy)
+        if policy == None or policy["role"] != "vendor":
             res = {"status": "failure", "message": "User not authorized."}
             return json_response(res, 401)
 

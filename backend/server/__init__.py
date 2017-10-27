@@ -27,6 +27,9 @@ app.logger.setLevel(logging.DEBUG)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
+from server.middleware import AuthPolicy
+app.wsgi_app = AuthPolicy(app.wsgi_app)
+
 from server.views import vendor_bp, auth_bp, post_bp
 app.register_blueprint(vendor_bp)
 app.register_blueprint(post_bp)
