@@ -15,6 +15,8 @@ $ cd ase_backend/
 $ pip install -r requirements.txt
 
 # Create PostgreSQL database (first time)
+$ psql -c ‘create extension cube;’ -U postgres
+$ psql -c ‘create extension earthdistance;’ -U postgres
 $ psql -c ‘create database foodtracker_dev;’ -U postgres
 $ python manager.py create_db
 
@@ -77,3 +79,10 @@ $ python manager.py test
   * returns {'status': 'success', 'message': 'Successfully logged out.'}, 200
   * returns {'status': 'failure', 'message': resp}, 401
   * returns {'status': 'failure',  'message': 'Provide a valid auth token.'}, 403
+
+## TODO (1st Iteration)
+* [x] Save (lattitude, longitude) to model Post; implement query by distance
+* [ ] Move geocoder to frontend which passes (location, lattitude, longitude) back to server
+      * Google Map Javascript API
+* [ ] Return only the latest post of all users in `get_post_listing` in model Post
+

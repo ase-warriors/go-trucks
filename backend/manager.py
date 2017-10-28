@@ -16,7 +16,7 @@ def drop_db():
 @manager.command
 def test():
     tests = unittest.TestLoader().discover('./tests', pattern='test*.py')
-    result = unittest.TextTestRunner(verbosity=0).run(tests)
+    result = unittest.TextTestRunner(verbosity=1).run(tests)
     if result.wasSuccessful():
        return 0
     return 1

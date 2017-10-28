@@ -64,14 +64,30 @@ class VendorAPI(MethodView):
 
 class VendorPostAPI(MethodView):
     def get(self, vendor_id):
-        p = Post.get_latest_post(vendor_id)
-        app.logger.debug(p)
-        if p:
-            res = {"location": p.location, "time": p.time, "menu": p.menu}
-            return json_response(res, 200)
-        else:
+        number = request.args.get("num", "1")
+        try:
+            number = int(number)
+            if number < 0:
+                raise ValueError
+        except ValueError:
+            return json_response({
+                "status": "failure",
+                "message": "Invalid argument num"
+            }, 400)
+
+        posts = Post.get_latest_post(vendor_id, number)
+        if posts is None:
             res = {"status": "failure", "message": "Error occurred"}
             return json_response(res, 404)
+
+        res = []
+        for p in posts:
+            res.append({
+                "location": p.location,
+                "time": p.time,
+                "menu": p.menu
+            })
+        return json_response(res, 200)
 
     def post(self, vendor_id):
         policy = request.environ.get("policy")
@@ -91,7 +107,7 @@ class VendorPostAPI(MethodView):
 
 
 vendor_bp.add_url_rule(
-    "/", view_func=VendorsAPI.as_view("vendors_api"), methods=["GET", "POST"])
+    "", view_func=VendorsAPI.as_view("vendors_api"), methods=["GET", "POST"])
 vendor_bp.add_url_rule(
     "/<int:vendor_id>",
     view_func=VendorsAPI.as_view("vendor_api"),

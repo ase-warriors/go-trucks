@@ -41,7 +41,7 @@ class TestPostModel(BaseTestCase):
     db.session.commit()
 
     form = dict(vendor_id=vendor.id,
-                location="nowhere",
+                location="Columbia University, New York",
                 time="forever")
     post = Post.add_post(vendor.id, form)
     self.assertEqual(post.vendor_id, form.get("vendor_id"))
@@ -54,7 +54,7 @@ class TestPostModel(BaseTestCase):
                           password="pwd"))
 
     form = dict(vendor_id=vendor.id,
-                location="nowhere",
+                location="Columbia University, New York",
                 time="t1")
     p1 = Post.add_post(vendor.id, form)
 
