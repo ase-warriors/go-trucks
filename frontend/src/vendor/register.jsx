@@ -39,8 +39,10 @@ class Register extends React.Component {
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
-          window.alert('register successful')
+          window.alert('register successful');
           this.props.finish();
+        } else {
+          window.alert(parsedMessage.message);
         }
       });
 
@@ -50,13 +52,12 @@ class Register extends React.Component {
 
   render() {
     return (
-      <div className="Login">
+      <div className="Register">
         <h3>Vendor Registeration</h3>
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>
             <FormControl
-              autoFocus
               type="email"
               value={this.state.email}
               onChange={this.handleChange}
