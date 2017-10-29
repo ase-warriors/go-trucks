@@ -1,5 +1,5 @@
 import React from 'react';
-const { Navbar, Nav, NavItem, MenuItem, NavDropdown } = require('react-bootstrap')
+const { Navbar, Nav, NavItem, MenuItem, NavDropdown } = require('react-bootstrap');
 
 const Login= require('./login.jsx');
 const Create = require('./create.jsx');
@@ -15,6 +15,13 @@ class Home extends React.Component {
       vendorID: "",
       registerlogin: false
     };
+
+    if (document.cookie !== "") {
+      const userInfo = JSON.parse(document.cookie);
+      console.log(JSON.stringify(document.cookie));
+      this.state.login = userInfo.login;
+      this.state.vendorID = userInfo.vendorID;
+    }
     this.userLogin = this.userLogin.bind(this);
     this.onClickLogout = this.onClickLogout.bind(this);
     this.onFinishRegister = this.onFinishRegister.bind(this);
@@ -24,10 +31,17 @@ class Home extends React.Component {
   componentDidMount() {
   }
 
-  userLogin(token) {
+  userLogin(token, vendor_id) {
     this.setState({
       login: token,
+      vendorID: vendor_id,
       registerlogin: false,
+    });
+
+    // save to cookie
+    document.cookie = JSON.stringify({
+      login: token,
+      vendorID: vendor_id,
     });
   }
 
@@ -47,7 +61,10 @@ class Home extends React.Component {
         if (parsedMessage.status == "success"){
               this.setState({
                 login: "",
+                vendorID: "",
               });
+          // clean the cookie
+          document.cookie = ""
           window.alert('You have logged out');
         }
       });
@@ -111,7 +128,7 @@ class Home extends React.Component {
     );
     const loginPage = (<Login
                        userLogin={this.userLogin}/>);
-    const createPage = (<Create token={this.state.login} />);
+    const createPage = (<Create token={this.state.login} vendorID={this.state.vendorID}/>);
 
     const registerPage = (<Register finish={this.onFinishRegister}/>);
 

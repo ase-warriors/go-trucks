@@ -31,7 +31,7 @@ class Create extends React.Component {
   onClickSubmit(event) {
     console.log(this.state);
     console.log(`token ${this.props.token}`);
-    d3.request("/post/")
+    d3.request(`/vendor/${this.props.vendorID}/post`)
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .header("Authorization", this.props.token)
@@ -54,7 +54,7 @@ class Create extends React.Component {
     });
   };
   getPosts() {
-    d3.request("/post/")
+    d3.request(`/vendor/${this.props.vendorID}/post`)
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .header("Authorization", this.props.token)
@@ -98,7 +98,7 @@ class Create extends React.Component {
       </form>
     );
     return (
-      <div>
+      <div className="Create">
         <h2>Current Postings</h2>
         <div><p>{JSON.stringify(this.state.post)}</p></div>
         <h2>Create Posting</h2>

@@ -27,7 +27,7 @@ class Register extends React.Component {
   };
 
   handleSubmit(event) {
-    d3.request("/vendor/")
+    d3.request("/vendor")
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .post(`email=${this.state.email}&password=${this.state.password}`, (res) => {
