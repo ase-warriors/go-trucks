@@ -1,0 +1,17 @@
+.Login, .Create {
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+.Login, .Create, .Start {
+  padding: 60px 0;
+}
+
+.Start {
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+button {
+  margin: 5px;
+}

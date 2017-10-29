@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-
 const d3 = require("d3");
 
 class Login extends React.Component {
@@ -29,7 +28,6 @@ class Login extends React.Component {
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .post(`email=${this.state.email}&password=${this.state.password}`, (res) => {
-
         if (res == null) {
           window.alert('incorrect credentials')
           return
@@ -38,11 +36,13 @@ class Login extends React.Component {
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
-          this.props.userLogin(parsedMessage.auth_token);
+          this.props.userLogin(parsedMessage.auth_token, parsedMessage.vendor_id);
+          document.cookie = JSON.stringify({
+            login: parsedMessage.auth_token,
+            vendorID: parsedMessage.vendor_id,
+          });
         }
       });
-
- 
     event.preventDefault();
   }
 
