@@ -4,6 +4,7 @@ const { Navbar, Nav, NavItem, MenuItem, NavDropdown } = require('react-bootstrap
 const Login= require('./login.jsx');
 const Create = require('./create.jsx');
 const Register = require('./register.jsx');
+const Start = require('./start.jsx');
 
 const d3 = require('d3');
 class Home extends React.Component {
@@ -99,6 +100,8 @@ class Home extends React.Component {
 
     const registerPage = (<Register finish={this.onFinishRegister}/>);
 
+    const startPage = (<Start />);
+
     if (this.state.register) {
       return (
         <div>
@@ -112,7 +115,7 @@ class Home extends React.Component {
       return (
         <div>
           <div>{navbarInstance}</div>
-          <div>{loginPage}</div>
+          <div>{startPage}</div>
         </div>
       );
     } else {
