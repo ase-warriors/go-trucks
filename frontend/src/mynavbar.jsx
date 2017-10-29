@@ -9,12 +9,12 @@ class MyNavbar extends React.Component {
     }
 
     render() {
-      const registerItem = null;
-      const logoutItem = null;
-      if (props.loggedin === true) {
-        registerItem = (<NavItem eventKey={5}>Register</NavItem>);
+      var registerItem = null;
+      var logoutItem = null;
+      if (this.props.loggedin === true) {
+        logoutItem = (<NavItem onClick={this.props.onClickLogout} eventKey={4}>Logout</NavItem >);
       } else {
-        logoutItem = (<NavItem eventKey={4}>Logout</NavItem >);
+        registerItem = (<NavItem onClick={this.props.onClickRegister} eventKey={5}>Register</NavItem>);
       }
 
       const navbarInstance = (
@@ -35,5 +35,4 @@ class MyNavbar extends React.Component {
       return navbarInstance;
     }
 }
-
-exports.module = MyNavbar;
+module.exports = MyNavbar;

@@ -98,27 +98,14 @@ class Home extends React.Component {
     var logoutItem = null;
     var actionItems = null;
     var registerItem = null;
-    if (this.state.login != "") {
-      logoutItem = (<NavItem onClick={this.onClickLogout} eventKey={4}>Logout</NavItem >);
-      actionItems = (<NavDropdown eventKey={3} title="Actions" id="basic-nav-dropdown">
-                     <MenuItem eventKey={3.1}>Create Posting</MenuItem>
-                     <MenuItem eventKey={3.2}>Modify Posting</MenuItem>
-                     <MenuItem divider />
-                     <MenuItem eventKey={3.3}>Edit Profile</MenuItem>
-                     </NavDropdown>);
-    } else {
-      registerItem = (<NavItem onClick={this.onClickRegister} eventKey={5}>Register</NavItem>);
-      console.log("register item added")
-    }
-    
-    const navbarInstance = (<MyNavbar loggedin={this.state.login === "" ? false : true}>);
-    const loginPage = (<Login
+    const navbarInstance = (<MyNavbar key={4} loggedin={this.state.login === "" ? false : true} onClickLogout={this.onClickLogout} onClickRegister={this.onClickRegister}/>);
+    const loginPage = (<Login key={0}
                        userLogin={this.userLogin}/>);
-    const createPage = (<Create token={this.state.login} vendorID={this.state.vendorID}/>);
+    const createPage = (<Create key={1} token={this.state.login} vendorID={this.state.vendorID}/>);
 
-    const registerPage = (<Register finish={this.onFinishRegister}/>);
+    const registerPage = (<Register key={2} finish={this.onFinishRegister}/>);
 
-    const startPage = (<Start onUserChooseRole={this.onUserChooseRole}/>);
+    const startPage = (<Start key={3} onUserChooseRole={this.onUserChooseRole}/>);
 
     const pageElements = [];
     pageElements.push(navbarInstance);
