@@ -17,7 +17,7 @@ class Register extends React.Component {
 
   validateForm() {
     console.log(this.state)
-    return this.state.password == this.state.repassword;
+    return this.state.password == this.state.repassword && this.state.email !== "" && this.state.password !== "";
   }
 
   handleChange(event) {
@@ -30,9 +30,9 @@ class Register extends React.Component {
     d3.request("/vendor")
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
-      .post(`email=${this.state.email}&password=${this.state.password}`, (res) => {
+      .post(`email=${this.state.email}&password=${this.state.password}`, (res,err) => {
         if(res == null) {
-          window.alert('registeration failure')
+          window.alert('registeration failure with: '+JSON.stringify(err))
           return
         }
         console.log(res.response)
