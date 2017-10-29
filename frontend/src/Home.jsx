@@ -12,19 +12,22 @@ class Home extends React.Component {
     super();
     this.state = {
       login: "",
-      register: false
+      vendorID: "",
+      registerlogin: false
     };
     this.userLogin = this.userLogin.bind(this);
     this.onClickLogout = this.onClickLogout.bind(this);
     this.onFinishRegister = this.onFinishRegister.bind(this);
     this.onClickRegister = this.onClickRegister.bind(this);
+    this.onUserChooseRole = this.onUserChooseRole.bind(this);
   }
   componentDidMount() {
   }
 
   userLogin(token) {
     this.setState({
-      login: token
+      login: token,
+      registerlogin: false,
     });
   }
 
@@ -53,14 +56,26 @@ class Home extends React.Component {
   onClickRegister() {
     console.log('register');
     this.setState({
-      register: true,
+      registerlogin: true,
     });
   }
 
   onFinishRegister() {
     this.setState({
-      register:false
+      registerlogin:false,
     });
+  }
+
+  onUserChooseRole(role) {
+    if (role == 0) {
+      // vendor role
+      this.setState({
+        registerlogin: true,
+      });
+      // goto login page
+    } else {
+      // go to customer page
+    }
   }
   render() {
     var logoutItem = null;
@@ -100,12 +115,13 @@ class Home extends React.Component {
 
     const registerPage = (<Register finish={this.onFinishRegister}/>);
 
-    const startPage = (<Start />);
+    const startPage = (<Start onUserChooseRole={this.onUserChooseRole}/>);
 
-    if (this.state.register) {
+    if (this.state.registerlogin) {
       return (
         <div>
           <div>{navbarInstance}</div>
+          <div>{loginPage}</div>
           <div>{registerPage}</div>
         </div>
       );

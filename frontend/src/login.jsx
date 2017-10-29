@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-
 const d3 = require("d3");
 
 class Login extends React.Component {
@@ -41,8 +40,6 @@ class Login extends React.Component {
           this.props.userLogin(parsedMessage.auth_token);
         }
       });
-
- 
     event.preventDefault();
   }
 

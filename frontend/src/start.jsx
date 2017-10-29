@@ -4,15 +4,19 @@ import d3 from "d3";
 
 class Start extends React.Component {
     constructor(props) {
-        super(props);
+      super(props);
     }
 
     render() {
         const buttonCustomer = (
-          <Button>Customer</Button>
+          <Button onClick={() => {
+              this.props.onUserChooseRole(1)
+            }}>Customer</Button>
         );
         const buttonVendor = (
-          <Button>Vendor</Button>
+          <Button onClick={() => {
+              this.props.onUserChooseRole(0)
+            }}>Vendor</Button>
         );
         return (
           <div className="Start">
@@ -25,4 +29,3 @@ class Start extends React.Component {
 }
 
 module.exports = Start
-            
