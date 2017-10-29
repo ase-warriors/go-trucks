@@ -71,7 +71,7 @@ $ python manager.py test
 ### Auth
 * POST /auth/login
   * {form=dict(email=string, password=string)}
-  * returns {'auth_token':jwt_token, 'status': 'success', 'message': 'Successfully logged in.'}, 200
+  * returns {'auth_token':jwt_token, 'status': 'success', 'message': 'Successfully logged in.', 'vendor_id': vendor_id}, 200
   * returns {'status': 'failure', 'message': 'User does not exist.'}, 404
   * returns {'status': 'failure', 'message': 'Try again'}, 500
 

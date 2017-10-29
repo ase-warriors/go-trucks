@@ -24,7 +24,8 @@ class LoginAPI(MethodView):
                     res = {
                         'status': 'success',
                         'message': 'Successfully logged in.',
-                        'auth_token': auth_token.decode()
+                        'auth_token': auth_token.decode(),
+                        'vendor_id': user.id
                     }
                     print "Login response:", res
                     return make_response(jsonify(res)), 200
