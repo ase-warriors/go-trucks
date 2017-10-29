@@ -1,10 +1,10 @@
 import React from 'react';
-const { Navbar, Nav, NavItem, MenuItem, NavDropdown } = require('react-bootstrap');
 
 const Login= require('./login.jsx');
 const Create = require('./create.jsx');
 const Register = require('./register.jsx');
 const Start = require('./start.jsx');
+const MyNavbar = require('./mynavbar.jsx');
 
 const d3 = require('d3');
 class Home extends React.Component {
@@ -111,21 +111,7 @@ class Home extends React.Component {
       console.log("register item added")
     }
     
-    const navbarInstance = (
-      <Navbar onClick={this.onNavBarEvent}>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <a href="/">Go Trucks</a>
-          </Navbar.Brand>
-        </Navbar.Header>
-        <Nav>
-          {actionItems}
-          <NavItem eventKey={2} href="#">About</NavItem>
-          {registerItem}
-          {logoutItem}
-        </Nav>
-      </Navbar>
-    );
+    const navbarInstance = (<MyNavbar loggedin={this.state.login === "" ? false : true}>);
     const loginPage = (<Login
                        userLogin={this.userLogin}/>);
     const createPage = (<Create token={this.state.login} vendorID={this.state.vendorID}/>);
@@ -134,32 +120,23 @@ class Home extends React.Component {
 
     const startPage = (<Start onUserChooseRole={this.onUserChooseRole}/>);
 
+    const pageElements = [];
+    pageElements.push(navbarInstance);
+
     if (this.state.registerlogin) {
-      return (
-        <div>
-          <div>{navbarInstance}</div>
-          <div>{loginPage}</div>
-          <div>{registerPage}</div>
-        </div>
-      );
+      pageElements.push(loginPage);
+      pageElements.push(registerPage);
+    } else if (this.state.login == "") {
+      pageElements.push(startPage);
+    } else {
+      pageElements.push(createPage);
     }
 
-    if (this.state.login == "") {
-      return (
-        <div>
-          <div>{navbarInstance}</div>
-          <div>{startPage}</div>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <div>{navbarInstance}</div>
-          <div>{createPage}</div>
-        </div>
-      );
-    }
+    return (<div className="Home">
+            {pageElements}
+            </div>);
   }
 }
+
 
 module.exports = Home;
