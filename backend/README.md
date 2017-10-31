@@ -49,23 +49,22 @@ $ python manager.py test
   * returns {"status": "failure", "message": "Error occurred"}, 401
 
 * POST /vendor/<int:vendor_id>/post
-  * {form=dict(location=string, time=string, menu=string(optional)), headers=dict(Authorization=token)}
+  * with form = dict(location=string, lat=float, lng=float, time=string, menu=string(optional)), headers=dict(Authorization=token)
   * returns {"status": "success", "message": "New post is added."}, 200
   * returns {"status": "failure", "message": "Error occurred"}, 401
 
-* GET /vendor/<int:vendor_id>/post
-  * returns {"location": "xxx", "time": "New post is added."}, 200
+* GET /vendor/<int:vendor_id>/post?num=1
+  * num: number of latest posts
+  * returns {"location", "time", "menu", "lat", "lng"}, 200
   * returns {"status": "failure", "message": "Error occurred"}, 401
-  * currently returns the latest post from vendor
-  * TODO: add parameter #posts to return
-
 
 
 ### Post
-* GET  /post
-  * returns \[{"vendor_id": vendor_id, "location": location, "time": time}\], 200
+* GET  /post?lat=40.8075355&lng=-73.9625727&distance=1.0
+  * distance: unit in mile
+  * returns \[{"vendor_id", "location", "lat", "lng", "time", "menu"}\], 200
   * returns {"status": "failure", "message": "Error occurred"}, 402
-
+  * returns {"status": "failure", "message": "Invalid arguments"}, 400
 
 
 ### Auth
@@ -81,8 +80,12 @@ $ python manager.py test
   * returns {'status': 'failure',  'message': 'Provide a valid auth token.'}, 403
 
 ## TODO (1st Iteration)
-* [x] Save (lattitude, longitude) to model Post; implement query by distance
-* [ ] Move geocoder to frontend which passes (location, lattitude, longitude) back to server
-      * Google Map Javascript API
-* [ ] Return only the latest post of all users in `get_post_listing` in model Post
+* Feature
+  * [x] Save (lattitude, longitude) to model Post; implement query by distance
+  * [x] Move geocoder to frontend which passes (location, lattitude, longitude) back to server
+  * [ ] Return only the latest post of all users (within the requested distance) in `get_post_listing` in model Post
+  * [ ] Only the vendor him/herself can see previous posts; customer can only view the lastest one
 
+* Bug fixs
+  * [ ] Debug unstable logout?
+  * [ ] Debug latest post?
