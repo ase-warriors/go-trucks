@@ -17,19 +17,16 @@ class PostsAPI(MethodView):
 
     def get(self):
         try:
-            distance = int(request.args.get("distance", "3"))
-            location = request.args.get("location", "")
-            #if location == "":
-            #   raise Exception("invalid location")
-            req = dict(location=location, distance=distance)
-            if not isinstance(distance, int):
-                raise Exception("invalid arguments")
-        except Exception:
-            res = {"status": "failure", "message": "invalid arguments"}
+            # TODO(amy): unit is mile?
+            distance = float(request.args.get("distance", 3.0))
+            lat = float(request.args.get("lat"))
+            lng = float(request.args.get("lng"))
+        except Exception as e:
+            print e
+            res = {"status": "failure", "message": "Invalid arguments"}
             return json_response(res, 400)
 
-        posts = Post.get_post_list(**req)
-
+        posts = Post.get_post_list(lat, lng, distance)
         if posts is None:
             res = {"status": "failure", "message": "Error occurred"}
             return json_response(res, 402)
@@ -39,8 +36,13 @@ class PostsAPI(MethodView):
             res.append({
                 "vendor_id": p.vendor_id,
                 "location": p.location,
+                "lat": p.lat,
+                "lng": p.lng,
                 "time": p.time
             })
+            if p.menu:
+                res[-1]["menu"] = p.menu
+
         return json_response(res, 200)
 
 

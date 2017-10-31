@@ -64,15 +64,14 @@ class VendorAPI(MethodView):
 
 class VendorPostAPI(MethodView):
     def get(self, vendor_id):
-        number = request.args.get("num", "1")
         try:
-            number = int(number)
+            number = int(request.args.get("num", "1"))
             if number < 0:
                 raise ValueError
         except ValueError:
             return json_response({
                 "status": "failure",
-                "message": "Invalid argument num"
+                "message": "Invalid argument"
             }, 400)
 
         posts = Post.get_latest_post(vendor_id, number)
@@ -85,13 +84,15 @@ class VendorPostAPI(MethodView):
             res.append({
                 "location": p.location,
                 "time": p.time,
-                "menu": p.menu
+                "lat": p.lat,
+                "lng": p.lng,
             })
+            if p.menu:
+                res[-1]["menu"] = p.menu
         return json_response(res, 200)
 
     def post(self, vendor_id):
         policy = request.environ.get("policy")
-        app.logger.debug("Post: policy=%s", policy)
         if policy == None or policy["role"] != "vendor" or policy["vendor_id"] != vendor_id:
             res = {"status": "failure", "message": "User not authorized."}
             return json_response(res, 401)

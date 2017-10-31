@@ -13,7 +13,6 @@ auth_bp = Blueprint('auth', __name__)
 class LoginAPI(MethodView):
     def post(self):
         post_data = request.form
-        print "Login: ", request, post_data
         try:
             email = post_data.get('email')
             password = post_data.get('password')
@@ -27,7 +26,6 @@ class LoginAPI(MethodView):
                         'auth_token': auth_token.decode(),
                         'vendor_id': user.id
                     }
-                    print "Login response:", res
                     return make_response(jsonify(res)), 200
             else:
                 res = {'status': 'failure', 'message': 'User does not exist.'}

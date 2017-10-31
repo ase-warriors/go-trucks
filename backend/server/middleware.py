@@ -10,7 +10,7 @@ class AuthPolicy(object):
     def __call__(self, environ, start_response):
         unkown_policy = {"role": "unknown"}
         auth_header = environ.get("HTTP_AUTHORIZATION", "")
-        app.logger.debug("header=%s", auth_header)
+        # app.logger.debug("header=%s", auth_header)
         if auth_header:
             try:
                 auth_token = auth_header.split(" ")[0]
@@ -18,7 +18,7 @@ class AuthPolicy(object):
                     resp = AuthPolicy.decode_auth_token(auth_token)
                     if not isinstance(resp, str):
                         policy = {"role": "vendor", "vendor_id": resp}
-                        app.logger.debug("policy=%s", policy)
+                        # app.logger.debug("policy=%s", policy)
                         environ["policy"] = policy
                         return self.app(environ, start_response)
             except IndexError:

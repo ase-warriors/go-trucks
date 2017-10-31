@@ -1,8 +1,4 @@
-import sys
-import json
 import unittest
-
-from server import db
 from server.models import Vendor, BlacklistToken
 from tests.base import BaseTestCase
 
@@ -60,4 +56,3 @@ class TestAuthBlueprint(BaseTestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
-
