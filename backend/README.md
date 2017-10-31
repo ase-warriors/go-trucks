@@ -55,6 +55,7 @@ $ python manager.py test
 
 * GET /vendor/<int:vendor_id>/post?num=1
   * num: number of latest posts
+  * Only the vendor him/herself (with right token) can view more than one previous posts; others can only view the latest one
   * returns {"location", "time", "menu", "lat", "lng"}, 200
   * returns {"status": "failure", "message": "Error occurred"}, 401
 
@@ -69,23 +70,27 @@ $ python manager.py test
 
 ### Auth
 * POST /auth/login
+
   * {form=dict(email=string, password=string)}
   * returns {'auth_token':jwt_token, 'status': 'success', 'message': 'Successfully logged in.', 'vendor_id': vendor_id}, 200
   * returns {'status': 'failure', 'message': 'User does not exist.'}, 404
   * returns {'status': 'failure', 'message': 'Try again'}, 500
 
 * POST /auth/logout
+
   * returns {'status': 'success', 'message': 'Successfully logged out.'}, 200
   * returns {'status': 'failure', 'message': resp}, 401
   * returns {'status': 'failure',  'message': 'Provide a valid auth token.'}, 403
 
 ## TODO (1st Iteration)
 * Feature
+
   * [x] Save (lattitude, longitude) to model Post; implement query by distance
   * [x] Move geocoder to frontend which passes (location, lattitude, longitude) back to server
   * [ ] Return only the latest post of all users (within the requested distance) in `get_post_listing` in model Post
-  * [ ] Only the vendor him/herself can see previous posts; customer can only view the lastest one
+  * [x] Only the vendor him/herself can see previous posts; customer can only view the lastest one
 
 * Bug fixs
+
   * [ ] Debug unstable logout?
   * [ ] Debug latest post?

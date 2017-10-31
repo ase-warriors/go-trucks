@@ -74,6 +74,11 @@ class VendorPostAPI(MethodView):
                 "message": "Invalid argument"
             }, 400)
 
+        policy = request.environ.get("policy")
+        if policy is None or policy["role"] != "vendor" or policy["vendor_id"] != vendor_id:
+            # other vendor/customer can only view the latest post
+            number = 1
+
         posts = Post.get_latest_post(vendor_id, number)
         if posts is None:
             res = {"status": "failure", "message": "Error occurred"}
@@ -93,7 +98,7 @@ class VendorPostAPI(MethodView):
 
     def post(self, vendor_id):
         policy = request.environ.get("policy")
-        if policy == None or policy["role"] != "vendor" or policy["vendor_id"] != vendor_id:
+        if policy is None or policy["role"] != "vendor" or policy["vendor_id"] != vendor_id:
             res = {"status": "failure", "message": "User not authorized."}
             return json_response(res, 401)
 

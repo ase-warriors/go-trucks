@@ -53,9 +53,10 @@ class TestVendorBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 401)
 
 
-    def test_get_post(self):
+    def test_get_post_authorized(self):
         vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
                                         password="test1"))
+
         form = get_test_post_form()
         p1 = Post.add_post(vendor.id, form)
         self.assertIsNotNone(p1)
@@ -65,12 +66,10 @@ class TestVendorBlueprint(BaseTestCase):
         self.assertIsNotNone(p2)
 
         with self.client:
-            response = self.get_vendor_post(vendor.id, 1)
+            response = self.get_vendor_post(vendor.id, 2, vendor.encode_auth_token())
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(len(response.json), 1)
+            self.assertEqual(len(response.json), 2)
 
-            self.assertEqual(response.json[0].get("menu"), form["menu"])
-            self.assertEqual(response.json[0], form)
 
     def test_get_post_empty(self):
         vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
@@ -96,13 +95,39 @@ class TestVendorBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 400)
 
 
+    def test_get_post_unauthorized(self):
+        vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
+                                        password="test1"))
+        form = get_test_post_form()
+        p1 = Post.add_post(vendor.id, form)
+        self.assertIsNotNone(p1)
+
+        form["menu"] = "pumpkin pie"
+        p2 = Post.add_post(vendor.id, form)
+        self.assertIsNotNone(p2)
+
+        with self.client:
+            response = self.get_vendor_post(vendor.id, 2)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(response.json), 1)
+
+            self.assertEqual(response.json[0].get("menu"), form["menu"])
+            self.assertEqual(response.json[0], form)
+
+
+
+
     def register_vendor(self, email, password):
         return self.client.post(
             "/vendor",
             data=dict(email=email,
                       password=password))
 
-    def get_vendor_post(self, vendor_id, num):
+    def get_vendor_post(self, vendor_id, num, token=None):
+        if token:
+            return self.client.get("/vendor/" + str(vendor_id) + "/post",
+                                   query_string=dict(num=num),
+                                   headers=dict(Authorization=token))
         return self.client.get("/vendor/" + str(vendor_id) + "/post",
                                query_string=dict(num=num))
 
