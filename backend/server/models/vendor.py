@@ -52,7 +52,7 @@ class Vendor(db.Model):
         try:
             payload = {
                 'exp': datetime.datetime.utcnow() + \
-                       datetime.timedelta(days=0, seconds=100),
+                       datetime.timedelta(days=0, minutes=30),
                 'iat': datetime.datetime.utcnow(),
                 'sub': self.id
             }
