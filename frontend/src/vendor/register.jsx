@@ -17,7 +17,7 @@ class Register extends React.Component {
 
   validateForm() {
     console.log(this.state)
-    return this.state.password == this.state.repassword;
+    return this.state.password == this.state.repassword && this.state.email !== "" && this.state.password !== "";
   }
 
   handleChange(event) {
@@ -30,17 +30,19 @@ class Register extends React.Component {
     d3.request("/vendor")
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
-      .post(`email=${this.state.email}&password=${this.state.password}`, (res) => {
+      .post(`email=${this.state.email}&password=${this.state.password}`, (res,err) => {
         if(res == null) {
-          window.alert('registeration failure')
+          window.alert('registeration failure with: '+JSON.stringify(err))
           return
         }
         console.log(res.response)
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
-          window.alert('register successful')
+          window.alert('register successful');
           this.props.finish();
+        } else {
+          window.alert(parsedMessage.message);
         }
       });
 
@@ -50,13 +52,12 @@ class Register extends React.Component {
 
   render() {
     return (
-      <div className="Login">
+      <div className="Register">
         <h3>Vendor Registeration</h3>
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>
             <FormControl
-              autoFocus
               type="email"
               value={this.state.email}
               onChange={this.handleChange}

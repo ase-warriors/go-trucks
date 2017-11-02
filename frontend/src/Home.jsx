@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Login= require('./login.jsx');
-const Create = require('./create.jsx');
-const Register = require('./register.jsx');
+const Login= require('./vendor/login.jsx');
+const Create = require('./vendor/create.jsx');
+const Register = require('./vendor/register.jsx');
 const Start = require('./start.jsx');
 const MyNavbar = require('./mynavbar.jsx');
 
@@ -105,14 +105,20 @@ class Home extends React.Component {
 
     const registerPage = (<Register key={2} finish={this.onFinishRegister}/>);
 
+
     const startPage = (<Start key={3} onUserChooseRole={this.onUserChooseRole}/>);
 
     const pageElements = [];
     pageElements.push(navbarInstance);
 
     if (this.state.registerlogin) {
-      pageElements.push(loginPage);
-      pageElements.push(registerPage);
+      const registerLoginPage = (
+        <div key={5}>
+          {loginPage}
+          {registerPage}
+        </div>
+      );
+      pageElements.push(registerLoginPage);
     } else if (this.state.login == "") {
       pageElements.push(startPage);
     } else {
