@@ -1,23 +1,20 @@
 import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-
 const d3 = require("d3");
 
-class Register extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      password: "",
-      repassword: "",
+      password: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   validateForm() {
-    console.log(this.state)
-    return this.state.password == this.state.repassword;
+    return this.state.email.length > 0 && this.state.password.length > 0;
   }
 
   handleChange(event) {
@@ -27,31 +24,32 @@ class Register extends React.Component {
   };
 
   handleSubmit(event) {
-    d3.request("/vendor")
+    d3.request("/auth/login")
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .post(`email=${this.state.email}&password=${this.state.password}`, (res) => {
-        if(res == null) {
-          window.alert('registeration failure')
+        if (res == null) {
+          window.alert('incorrect credentials')
           return
         }
         console.log(res.response)
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
-          window.alert('register successful')
-          this.props.finish();
+          this.props.onUserLogin(parsedMessage.auth_token, parsedMessage.vendor_id);
+          document.cookie = JSON.stringify({
+            login: parsedMessage.auth_token,
+            vendorID: parsedMessage.vendor_id,
+          });
         }
       });
-
- 
     event.preventDefault();
   }
 
   render() {
     return (
       <div className="Login">
-        <h3>Vendor Registeration</h3>
+        <h3>Vendor Login</h3>
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>
@@ -70,21 +68,13 @@ class Register extends React.Component {
               type="password"
             />
           </FormGroup>
-          <FormGroup controlId="repassword" bsSize="large">
-            <ControlLabel>Confirm Password</ControlLabel>
-            <FormControl
-              value={this.state.repassword}
-              onChange={this.handleChange}
-              type="password"
-            />
-          </FormGroup>
           <Button
             block
             bsSize="large"
             disabled={!this.validateForm()}
             type="submit"
           >
-            Register
+            Login
           </Button>
         </form>
       </div>
@@ -92,4 +82,4 @@ class Register extends React.Component {
   }
 }
 
-module.exports = Register
+module.exports = Login

@@ -35,7 +35,7 @@ class Create extends React.Component {
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .header("Authorization", this.props.token)
-      .post(`location=${this.state.location}&time=${this.state.time}`, (res) => {
+      .post(`location=${this.state.location}&time=${this.state.time}&lat=${42.71}&lng=${-73.9626}`, (res) => {
         console.log(res.response)
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)

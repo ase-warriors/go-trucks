@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Login= require('./login.jsx');
-const Create = require('./create.jsx');
-const Register = require('./register.jsx');
-const Start = require('./start.jsx');
+const Login= require('./vendor/login.jsx');
+const Create = require('./vendor/create.jsx');
+const Register = require('./vendor/register.jsx');
+const View = require('./customer/view.jsx')
 const MyNavbar = require('./mynavbar.jsx');
 
 const d3 = require('d3');
@@ -13,7 +13,7 @@ class Home extends React.Component {
     this.state = {
       login: "",
       vendorID: "",
-      registerlogin: false
+      registerlogin: false,
     };
 
     if (document.cookie !== "") {
@@ -22,16 +22,16 @@ class Home extends React.Component {
       this.state.login = userInfo.login;
       this.state.vendorID = userInfo.vendorID;
     }
-    this.userLogin = this.userLogin.bind(this);
+    this.onUserLogin = this.onUserLogin.bind(this);
     this.onClickLogout = this.onClickLogout.bind(this);
     this.onFinishRegister = this.onFinishRegister.bind(this);
     this.onClickRegister = this.onClickRegister.bind(this);
-    this.onUserChooseRole = this.onUserChooseRole.bind(this);
   }
   componentDidMount() {
+    return
   }
 
-  userLogin(token, vendor_id) {
+  onUserLogin(token, vendor_id) {
     this.setState({
       login: token,
       vendorID: vendor_id,
@@ -54,6 +54,7 @@ class Home extends React.Component {
       .post('', (res) => {
         if(res == null) {
           window.alert('logout failure');
+          document.cookie=""//clear anyways
           return;
         }
         const parsedMessage = JSON.parse(res.response);
@@ -83,39 +84,33 @@ class Home extends React.Component {
     });
   }
 
-  onUserChooseRole(role) {
-    if (role == 0) {
-      // vendor role
-      this.setState({
-        registerlogin: true,
-      });
-      // goto login page
-    } else {
-      // go to customer page
-    }
-  }
   render() {
     var logoutItem = null;
     var actionItems = null;
     var registerItem = null;
     const navbarInstance = (<MyNavbar key={4} loggedin={this.state.login === "" ? false : true} onClickLogout={this.onClickLogout} onClickRegister={this.onClickRegister}/>);
     const loginPage = (<Login key={0}
-                       userLogin={this.userLogin}/>);
+                       onUserLogin={this.onUserLogin}/>);
     const createPage = (<Create key={1} token={this.state.login} vendorID={this.state.vendorID}/>);
 
     const registerPage = (<Register key={2} finish={this.onFinishRegister}/>);
 
-    const startPage = (<Start key={3} onUserChooseRole={this.onUserChooseRole}/>);
-
+    const viewPage = (<View key={5}/>);
     const pageElements = [];
-    pageElements.push(navbarInstance);
 
+    pageElements.push(navbarInstance);
+    console.log(this.state)
     if (this.state.registerlogin) {
-      pageElements.push(loginPage);
-      pageElements.push(registerPage);
-    } else if (this.state.login == "") {
-      pageElements.push(startPage);
-    } else {
+      const registerLoginPage = (
+        <div key={5}>
+          {loginPage}
+          {registerPage}
+        </div>
+      );
+      pageElements.push(registerLoginPage);
+    } else if (this.state.login == "") { // direct to vendor
+      pageElements.push(viewPage);
+    } else { // direct to customer
       pageElements.push(createPage);
     }
 
