@@ -36,7 +36,7 @@ class Login extends React.Component {
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
-          this.props.userLogin(parsedMessage.auth_token, parsedMessage.vendor_id);
+          this.props.onUserLogin(parsedMessage.auth_token, parsedMessage.vendor_id);
           document.cookie = JSON.stringify({
             login: parsedMessage.auth_token,
             vendorID: parsedMessage.vendor_id,
