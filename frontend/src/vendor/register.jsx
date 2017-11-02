@@ -33,7 +33,7 @@ class Register extends React.Component {
       .post(`email=${this.state.email}&password=${this.state.password}`, (res,err) => {
         if(res == null) {
           window.alert('registeration failure with: '+JSON.stringify(err))
-          return
+          this.props.finish();
         }
         console.log(res.response)
         const parsedMessage = JSON.parse(res.response);
