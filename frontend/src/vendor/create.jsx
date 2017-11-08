@@ -19,12 +19,15 @@ class Create extends React.Component {
     super(props);
     this.state = {
       location: "",
+      lng: "",
+      lat: "",
       time:"0",
       post:null,
     };
     this.handleChange = this.handleChange.bind(this);
     this.onClickSubmit = this.onClickSubmit.bind(this);
     this.getPosts = this.getPosts.bind(this);
+    this.notifyCoordinates = this.notifyCoordinates.bind(this);
   }
   componentDidMount() {
     this.getPosts();
@@ -72,13 +75,23 @@ class Create extends React.Component {
         }
       });
   }
+  notifyCoordinates(co) {
+    console.log(co.geometry.location.lat());
+    console.log(co.geometry.location.lng());
+    this.setState({
+      lng: co.geometry.location.lng(),
+      lat: co.geometry.location.lat(),
+    });
+  }
   render() {
     const formInstance = (
       <form onSubmit = {this.onClickSubmit}>
+        <label className="control-label">Enter Posting Location</label>
+        <PlacesWithStandaloneSearchBox notifyCoordinates = {this.notifyCoordinates}/>
         <FieldGroup
           id="location"
-          label="Enter Posting Location"
-          placeholder="e.g. 116th Broadway"
+          label="Predicted Posting Coordinates"
+          placeholder={`(${this.state.lng}, ${this.state.lat})`}
           onChange={this.handleChange}
           />
         <FormGroup controlId="time">
@@ -100,7 +113,7 @@ class Create extends React.Component {
     );
     return (
       <div className="Create">
-        <PlacesWithStandaloneSearchBox />
+
         <h2>Current Postings</h2>
         <div><p>{JSON.stringify(this.state.post)}</p></div>
         <h2>Create Posting</h2>

@@ -22,7 +22,9 @@ const PlacesWithStandaloneSearchBox = compose(
         },
         onPlacesChanged: () => {
           const places = refs.searchBox.getPlaces();
-
+          if (places.length > 0) {
+            this.props.notifyCoordinates(places[0])
+          }
           this.setState({
             places,
           });
@@ -32,7 +34,7 @@ const PlacesWithStandaloneSearchBox = compose(
   }),
   withScriptjs  
 )(props =>
-  <div data-standalone-searchbox="">
+  <div data-standalone-searchbox="" className = "form-group">
     <StandaloneSearchBox
       ref={props.onSearchBoxMounted}
       bounds={props.bounds}
@@ -40,7 +42,7 @@ const PlacesWithStandaloneSearchBox = compose(
     >
       <input
         type="text"
-        placeholder="Customized your placeholder"
+        placeholder="e.g. 2920 Broadway, New York"
         style={{
           boxSizing: `border-box`,
           border: `1px solid transparent`,
@@ -55,15 +57,6 @@ const PlacesWithStandaloneSearchBox = compose(
         }}
       />
     </StandaloneSearchBox>
-    <ol>
-      {props.places.map(({ place_id, formatted_address, geometry: { location } }) =>
-        <li key={place_id}>
-          {formatted_address}
-          {" at "}
-          ({location.lat()}, {location.lng()})
-        </li>
-      )}
-  </ol>
   </div>
  );
 
