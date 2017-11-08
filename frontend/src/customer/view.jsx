@@ -1,37 +1,44 @@
 import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-
+const MapWithAMarkerClusterer = require("./map.jsx");
 const d3 = require("d3");
 
 class View extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    // };
+    this.getPosts = this.getPosts.bind(this);
+    this.state = {
+      posts: []
+    };
   }
+  getPosts() {
+    d3.request(`/post?lat=${40.8075355}&lng=${-73.9625727}&distance=${1000.0}`)
+      .header("X-Requested-With", "XMLHttpRequest")
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .get((res) => {
+        const parsedMessage = JSON.parse(res.response);
+        if (parsedMessage) {
+          this.setState({
+            posts: parsedMessage
+          });
+        } else {
+          console.log('get posts failed');
+        }
+      });
+  }
+  
   componentDidMount() {
-    var vlocation = {lat: 40.8075, lng: -73.9626};
-    var v1loc = {lat: 40.5128, lng: -73.1006};
-
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 20,
-      center: vlocation,
-      //center: v1loc
-    });
-    var marker1 = new google.maps.Marker({
-      position: vlocation,
-      map: map,
-      title:"Waffles and Dinges"
-    });
-    var marker2 = new google.maps.Marker({
-  	  position: v1loc,
-      map: map,
-      title:"Nuts for Juices"
-    });
+    this.getPosts()
   }
   render() {
+    const myMarkers = this.state.posts.map(e => ({longitude: e.lng, latitude: e.lat}));
+
+    const myMap = <MapWithAMarkerClusterer markers = {myMarkers} />
     return (
-      <div id="map"></div>
+      <div className="view">
+        <div key="posts_list">{JSON.stringify(this.state.posts)}</div>
+        {myMap}
+      </div>
     );
   }
 }
