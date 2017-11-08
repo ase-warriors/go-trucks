@@ -15,7 +15,7 @@ install:
 before_script:
   - psql -c 'create database foodtracker_test;' -U postgres
   - psql -c 'create extension cube;' -U postgres
-  - psql -c 'create extension extension;' -U postgres
+  - psql -c 'create extension earthdistance;' -U postgres
   - python manager.py create_db
 
 script:
