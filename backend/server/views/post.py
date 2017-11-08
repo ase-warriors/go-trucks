@@ -18,7 +18,11 @@ class PostsAPI(MethodView):
     def get(self):
         try:
             # TODO(amy): unit is mile?
-            distance = float(request.args.get("distance", 3.0))
+            if "distance" not in request.args:
+                distance = None
+            else:
+                distance_in_miles = float(request.args.get("distance"))
+                distance = distance_in_miles * 1.60934 * 1000
             lat = float(request.args.get("lat"))
             lng = float(request.args.get("lng"))
         except Exception as e:
