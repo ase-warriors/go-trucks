@@ -1,0 +1,27 @@
+language: python
+
+python:
+  - "2.7"
+
+service:
+  - postgresql
+
+before_install:
+  - export APP_SETTINGS="server.config.TestingConfig"
+
+install:
+  - pip install -r requirements.txt
+
+before_script:
+  - psql -c 'create database foodtracker_test;' -U postgres
+  - psql -c 'create extension cube;' -U postgres
+  - psql -c 'create extension extension;' -U postgres
+  - python manager.py create_db
+
+script:
+  - ./presubmit.sh
+
+after_failure:
+  - git diff --name-only
+  - git diff
+
