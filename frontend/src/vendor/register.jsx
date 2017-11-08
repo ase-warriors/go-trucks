@@ -27,16 +27,21 @@ class Register extends React.Component {
   };
 
   handleSubmit(event) {
+    // var myRequest = new Request('/vendor', {method: 'POST', body: '{"foo":"bar"}'});
+
     d3.request("/vendor")
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
-      .post(`email=${this.state.email}&password=${this.state.password}`, (res,err) => {
-        if(res == null) {
-          window.alert('registeration failure with: '+JSON.stringify(err))
-          return
+      .post(`email=${this.state.email}&password=${this.state.password}`, (err, data) => {
+        console.log('register returned');
+        console.log(data);
+
+        if(err != null) {
+          window.alert('registeration failure with:')
+          this.props.finish();
         }
-        console.log(res.response)
-        const parsedMessage = JSON.parse(res.response);
+        console.log(data.response)
+        const parsedMessage = JSON.parse(data.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
           window.alert('register successful');
@@ -45,8 +50,6 @@ class Register extends React.Component {
           window.alert(parsedMessage.message);
         }
       });
-
- 
     event.preventDefault();
   }
 

@@ -39,21 +39,25 @@ $ python manager.py test
 
 ### Vendor
 * POST /vendor
+  * To register a new vendor
   * {form=dict(email=string, password=string)}
   * returns {"status": "success", "id": vendor.id}, 200
   * returns {"status": "failure", "message": "User already exists."}, 202
   * returns {"status": "failure", "message": "Error occurred"}, 401
 
 * GET  /vendor/<int:vendor_id>
+  * To obtain vendor information
   * returns  {"vendor_id": vendor.id, "email": vendor.email, "registered_on": vendor.registered_on}, 200
   * returns {"status": "failure", "message": "Error occurred"}, 401
 
 * POST /vendor/<int:vendor_id>/post
+  * To add a new vendor posting
   * with form = dict(location=string, lat=float, lng=float, time=string, menu=string(optional)), headers=dict(Authorization=token)
   * returns {"status": "success", "message": "New post is added."}, 200
   * returns {"status": "failure", "message": "Error occurred"}, 401
 
 * GET /vendor/<int:vendor_id>/post?num=1
+  * To get a list of vendor's (num)-th latest posts
   * num: number of latest posts
   * Only the vendor him/herself (with right token) can view more than one previous posts; others can only view the latest one
   * returns {"location", "time", "menu", "lat", "lng"}, 200
@@ -62,6 +66,7 @@ $ python manager.py test
 
 ### Post
 * GET  /post?lat=40.8075355&lng=-73.9625727&distance=1.0
+  * To get the latest postings near a location within some distance
   * distance: unit in mile
   * returns \[{"vendor_id", "location", "lat", "lng", "time", "menu"}\], 200
   * returns {"status": "failure", "message": "Error occurred"}, 402
@@ -70,14 +75,14 @@ $ python manager.py test
 
 ### Auth
 * POST /auth/login
-
+  * To obtain the authentication token
   * {form=dict(email=string, password=string)}
   * returns {'auth_token':jwt_token, 'status': 'success', 'message': 'Successfully logged in.', 'vendor_id': vendor_id}, 200
   * returns {'status': 'failure', 'message': 'User does not exist.'}, 404
   * returns {'status': 'failure', 'message': 'Try again'}, 500
 
 * POST /auth/logout
-
+  * To logout a vendor session
   * returns {'status': 'success', 'message': 'Successfully logged out.'}, 200
   * returns {'status': 'failure', 'message': resp}, 401
   * returns {'status': 'failure',  'message': 'Provide a valid auth token.'}, 403
