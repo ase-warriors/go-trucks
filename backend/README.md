@@ -2,7 +2,7 @@ FoodTracker Backend
 ===========================
 Project for ASE, Fall 2017
 
-![CI](https://travis-ci.org/AmyJiang/ase_backend.svg?branch=master)
+![CI](https://travis-ci.org/ase-warriors/go-trucks.svg?branch=master)
 
 ## Setup and Run Server
 
@@ -15,9 +15,9 @@ $ cd ase_backend/
 $ pip install -r requirements.txt
 
 # Create PostgreSQL database (first time)
-$ psql -c ‘create extension cube;’ -U postgres
-$ psql -c ‘create extension earthdistance;’ -U postgres
 $ psql -c ‘create database foodtracker_dev;’ -U postgres
+$ psql -d foodtracker_dev -c ‘create extension cube;’ -U postgres
+$ psql -d foodtracker_dev -c ‘create extension earthdistance;’ -U postgres
 $ python manager.py create_db
 
 # Run server
@@ -29,6 +29,8 @@ $ python manager.py runserver
 ```
 # Create PostgreSQL database (first time)
 $ psql -c ‘create database foodtracker_test;’ -U postgres
+$ psql -d foodtracker_test -c ‘create extension cube;’ -U postgres
+$ psql -d foodtracker_test -c ‘create extension earthdistance;’ -U postgres
 $ python manager.py create_db
 
 # Run tests
