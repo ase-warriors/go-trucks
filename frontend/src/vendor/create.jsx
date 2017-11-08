@@ -2,6 +2,7 @@ import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
 const d3 = require("d3");
+const PlacesWithStandaloneSearchBox = require("./MyStandaloneSearchBox.jsx")
 
 function FieldGroup(props) {
   const {id, type, label, placeholder, onChange} = props;
@@ -99,6 +100,7 @@ class Create extends React.Component {
     );
     return (
       <div className="Create">
+        <PlacesWithStandaloneSearchBox />
         <h2>Current Postings</h2>
         <div><p>{JSON.stringify(this.state.post)}</p></div>
         <h2>Create Posting</h2>
