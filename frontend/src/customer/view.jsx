@@ -12,7 +12,7 @@ class View extends React.Component {
     };
   }
   getPosts() {
-    d3.request(`/post?lat=${40.8075355}&lng=${-73.9625727}&distance=${1000.0}`)
+    d3.request(`/post?lat=${40.8075355}&lng=${-73.9625727}&distance=${5}`)
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .get((res) => {

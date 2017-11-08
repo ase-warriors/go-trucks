@@ -32,7 +32,7 @@ class Login extends React.Component {
           window.alert('incorrect credentials')
           return
         }
-        console.log(res.response)
+        console.log(res);
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
