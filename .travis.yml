@@ -1,3 +1,10 @@
+notifications:
+    email:
+        recipients:
+            - rj2394@columbia.edu
+        on_success: never
+        on_failure: always
+
 language: python
 
 python:
@@ -16,9 +23,10 @@ before_script:
   - psql -c 'create database foodtracker_test;' -U postgres
   - psql -c 'create extension cube;' -U postgres
   - psql -c 'create extension earthdistance;' -U postgres
-  - python manager.py create_db
+  - python backend/manager.py create_db
 
 script:
+  - cd backend
   - ./presubmit.sh
 
 after_failure:
