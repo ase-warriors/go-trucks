@@ -19,8 +19,8 @@ class Create extends React.Component {
     super(props);
     this.state = {
       location: "",
-      lng: "",
-      lat: "",
+      lng: 0.0,
+      lat: 0.0,
       time:"0",
       post:null,
     };
@@ -39,7 +39,7 @@ class Create extends React.Component {
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .header("Authorization", this.props.token)
-      .post(`location=${this.state.location}&time=${this.state.time}&lat=${42.71}&lng=${-73.9626}`, (res) => {
+      .post(`location=${this.state.location}&time=${this.state.time}&lat=${this.state.lat}&lng=${this.state.lng}`, (res) => {
         console.log(res.response)
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
@@ -78,9 +78,11 @@ class Create extends React.Component {
   notifyCoordinates(co) {
     console.log(co.geometry.location.lat());
     console.log(co.geometry.location.lng());
+    const flat = parseFloat(co.geometry.location.lat());
+    const flng = parseFloat(co.geometry.location.lng());
     this.setState({
-      lng: co.geometry.location.lng(),
-      lat: co.geometry.location.lat(),
+      lng: flng,
+      lat: flat,
     });
   }
   render() {
@@ -93,6 +95,7 @@ class Create extends React.Component {
           label="Predicted Posting Coordinates"
           placeholder={`(${this.state.lng}, ${this.state.lat})`}
           onChange={this.handleChange}
+          disabled={true}
           />
         <FormGroup controlId="time">
       <ControlLabel>Choose Posting Time</ControlLabel>
