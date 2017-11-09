@@ -1,0 +1,34 @@
+notifications:
+    email:
+        recipients:
+            - rj2394@columbia.edu
+        on_success: never
+        on_failure: always
+
+language: python
+
+python:
+  - "2.7"
+
+service:
+  - postgresql
+
+before_install:
+  - export APP_SETTINGS="server.config.TestingConfig"
+
+install:
+  - pip install -r backend/requirements.txt
+
+before_script:
+  - psql -c 'create database foodtracker_test;' -U postgres
+  - psql -d foodtracker_test -c 'create extension cube;' -U postgres
+  - psql -d foodtracker_test -c 'create extension earthdistance;' -U postgres
+  - python backend/manager.py create_db
+
+script:
+  - cd backend; ./presubmit.sh
+
+after_failure:
+  - git diff --name-only
+  - git diff
+
