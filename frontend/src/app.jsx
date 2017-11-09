@@ -1,4 +1,4 @@
-import Home from './Home.jsx';
+import Home from './home.jsx';
 const React = require('react');
 const ReactDOM = require('react-dom');
 
