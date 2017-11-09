@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Table, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 const MapWithAMarkerClusterer = require("./map.jsx");
 const d3 = require("d3");
 
@@ -26,7 +26,33 @@ class View extends React.Component {
         }
       });
   }
-  
+
+  tableify() {
+    const tableBody = this.state.posts.map(e => {
+      return (
+        <tr key={e.vendor_id}>
+          <td>{e.vendor_id}</td>
+          <td>{e.lat}</td>
+          <td>{e.lng}</td>
+          <td>{e.time} min later</td>
+        </tr>
+      );
+    })
+    return (
+      <Table striped bordered condensed hover>
+        <thead>
+          <tr>
+            <th>Vendor #</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Posting Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableBody}
+        </tbody>
+      </Table>);
+  }
   componentDidMount() {
     this.getPosts()
   }
@@ -36,8 +62,10 @@ class View extends React.Component {
     const myMap = <MapWithAMarkerClusterer markers = {myMarkers} />
     return (
       <div className="view">
-        <div key="posts_list">{JSON.stringify(this.state.posts)}</div>
-        {myMap}
+        <div id="post-list-table" key="posts_list" className="posting-list">
+          {this.tableify()}
+        </div>
+        <div key="google_map" className="posting-map">{myMap}</div>
       </div>
     );
   }

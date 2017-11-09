@@ -1,8 +1,8 @@
 import React from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Well, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
 const d3 = require("d3");
-const PlacesWithStandaloneSearchBox = require("./MyStandaloneSearchBox.jsx")
+const PlacesWithStandaloneSearchBox = require("./searchbox.jsx")
 
 function FieldGroup(props) {
   const {id, type, label, placeholder, onChange} = props;
@@ -114,11 +114,26 @@ class Create extends React.Component {
       </FormGroup>
       </form>
     );
+    var currentPost = (
+        <Well>
+          <p>Last Posting Lagtitude: N/A</p>
+          <p>Last Posting Longitude: N/A</p>
+          <p>Last Posting Time: N/A</p>
+        </Well>);
+
+    if (this.state.post !== null && this.state.post.length > 0){
+      currentPost = (
+        <Well>
+          <p>Last Posting Lagtitude: {this.state.post[0].lat}</p>
+          <p>Last Posting Longitude: {this.state.post[0].lng}</p>
+          <p>Last Posting Time: {this.state.post[0].time} minutes later</p>
+        </Well>);
+    }
+
     return (
       <div className="Create">
-
         <h2>Current Postings</h2>
-        <div><p>{JSON.stringify(this.state.post)}</p></div>
+        {currentPost}
         <h2>Create Posting</h2>
         <div>{formInstance}</div>
       </div>
