@@ -61,6 +61,7 @@ class Register extends React.Component {
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>
             <FormControl
+              id="register-email"
               type="email"
               value={this.state.email}
               onChange={this.handleChange}
@@ -69,6 +70,7 @@ class Register extends React.Component {
           <FormGroup controlId="password" bsSize="large">
             <ControlLabel>Password</ControlLabel>
             <FormControl
+              id="register-password"
               value={this.state.password}
               onChange={this.handleChange}
               type="password"
@@ -77,6 +79,7 @@ class Register extends React.Component {
           <FormGroup controlId="repassword" bsSize="large">
             <ControlLabel>Confirm Password</ControlLabel>
             <FormControl
+              id="register-repassword"
               value={this.state.repassword}
               onChange={this.handleChange}
               type="password"
@@ -85,6 +88,7 @@ class Register extends React.Component {
           <Button
             block
             bsSize="large"
+            id="register-submit"
             disabled={!this.validateForm()}
             type="submit"
           >

@@ -54,6 +54,7 @@ class Login extends React.Component {
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>
             <FormControl
+              id="login-email"
               autoFocus
               type="email"
               value={this.state.email}
@@ -63,6 +64,7 @@ class Login extends React.Component {
           <FormGroup controlId="password" bsSize="large">
             <ControlLabel>Password</ControlLabel>
             <FormControl
+              id="login-password"
               value={this.state.password}
               onChange={this.handleChange}
               type="password"
@@ -70,6 +72,7 @@ class Login extends React.Component {
           </FormGroup>
           <Button
             block
+            id="login-submit"
             bsSize="large"
             disabled={!this.validateForm()}
             type="submit"

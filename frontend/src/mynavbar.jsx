@@ -14,7 +14,7 @@ class MyNavbar extends React.Component {
       if (this.props.loggedin === true) {
         logoutItem = (<NavItem onClick={this.props.onClickLogout} eventKey={4}>Logout</NavItem >);
       } else {
-        registerItem = (<NavItem onClick={this.props.onClickRegister} eventKey={5}>Vendor Portal</NavItem>);
+        registerItem = (<NavItem id="vendor-portal" onClick={this.props.onClickRegister} eventKey={5}>Vendor Portal</NavItem>);
       }
 
       const navbarInstance = (
