@@ -16,6 +16,8 @@ class Vendor(db.Model):
     name = db.Column(db.String(500), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
 
+    posts = db.relationship("Post", back_populates="vendor")
+
     def __init__(self, email, password, name):
         self.email = email
         self.password = bcrypt.generate_password_hash(
