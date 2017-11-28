@@ -2,7 +2,7 @@
 
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
-postgres_local_base = "postgresql://postgres:postgreshre@localhost/"
+postgres_local_base = "postgresql://postgres:test@localhost/"
 database_name = "foodtracker"
 
 
