@@ -25,14 +25,14 @@ $ python manager.py runserver
 ```
 
 For database scheme changes, must recreate both databases as follows
-'''
+```
 $ export APP_SETTINGS="server.config.TestingConfig"
 $ python manager.py drop_db
 $ python manager.py create_db
 $ export APP_SETTINGS="server.config.DevelopmentConfig"
 $ python manager.py drop_db
 $ python manager.py create_db
-'''
+```
 
 
 ## Test Server
@@ -105,10 +105,7 @@ $ python manager.py test
 
   * [x] Save (lattitude, longitude) to model Post; implement query by distance
   * [x] Move geocoder to frontend which passes (location, lattitude, longitude) back to server
-  * [ ] Return only the latest post of all users (within the requested distance) in `get_post_listing` in model Post
+  * [x] Return only the latest post of all users (within the requested distance) in `get_post_listing` in model Post
   * [x] Only the vendor him/herself can see previous posts; customer can only view the lastest one
 
 * Bug fixs
-
-  * [ ] Debug unstable logout?
-  * [ ] Debug latest post?
