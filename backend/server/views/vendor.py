@@ -56,6 +56,7 @@ class VendorAPI(MethodView):
 
         res = {
             "vendor_id": vendor.id,
+            "name": vendor.name,
             "email": vendor.email,
             "registered_on": vendor.registered_on
         }

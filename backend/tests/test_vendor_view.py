@@ -14,8 +14,10 @@ def get_test_post_form():
 class TestVendorBlueprint(BaseTestCase):
 
     def test_get_vendors(self):
-        Vendor.add_vendor(dict(email="test1@gmail.com", password="test1"))
-        Vendor.add_vendor(dict(email="test2@gmail.com", password="test2"))
+        Vendor.add_vendor(dict(email="test1@gmail.com",
+                               password="test1", name="vendor1"))
+        Vendor.add_vendor(dict(email="test2@gmail.com",
+                               password="test2", name="vendor2"))
         with self.client:
             response = self.client.get("/vendor")
             self.assertEqual(response.status_code, 200)
@@ -23,19 +25,22 @@ class TestVendorBlueprint(BaseTestCase):
 
     def test_registration(self):
         with self.client:
-            response = self.register_vendor('test@gmail.com', 'pwd')
+            response = self.register_vendor('test@gmail.com', 'pwd', 'vendor')
             self.assertEqual(response.status_code, 201)
 
     def test_repeated_registration(self):
-        v = Vendor.add_vendor(dict(email="test1@gmail.com", password="test1"))
+        v = Vendor.add_vendor(dict(email="test1@gmail.com",
+                                   password="test1",
+                                   name="vendor1"))
         with self.client:
-            response = self.register_vendor(v.email, "pwd")
+            response = self.register_vendor(v.email, "pwd", 'vendor')
             self.assertEqual(response.status_code, 202)
 
 
     def test_add_post(self):
         vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
-                                        password="test1"))
+                                        password="test1",
+                                        name="vendor1"))
         with self.client:
             response = self.add_vendor_post(vendor.id, get_test_post_form(),
                                             vendor.encode_auth_token())
@@ -43,7 +48,7 @@ class TestVendorBlueprint(BaseTestCase):
 
     def test_add_post_failed(self):
         vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
-                                        password="test1"))
+                                        password="test1", name="vendor1"))
         form = get_test_post_form()
         with self.client:
             response = self.add_vendor_post(vendor.id, form, "wrongtoken")
@@ -55,7 +60,7 @@ class TestVendorBlueprint(BaseTestCase):
 
     def test_get_post_authorized(self):
         vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
-                                        password="test1"))
+                                        password="test1", name="vendor1"))
 
         form = get_test_post_form()
         p1 = Post.add_post(vendor.id, form)
@@ -73,7 +78,7 @@ class TestVendorBlueprint(BaseTestCase):
 
     def test_get_post_empty(self):
         vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
-                                        password="test1"))
+                                        password="test1", name="vendor1"))
         with self.client:
             response = self.get_vendor_post(vendor.id, 1)
             self.assertEqual(response.status_code, 200)
@@ -82,7 +87,7 @@ class TestVendorBlueprint(BaseTestCase):
 
     def test_get_post_invalid_args(self):
         vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
-                                        password="test1"))
+                                        password="test1", name="vendor1"))
         form = get_test_post_form()
         p1 = Post.add_post(vendor.id, form)
         self.assertIsNotNone(p1)
@@ -97,7 +102,7 @@ class TestVendorBlueprint(BaseTestCase):
 
     def test_get_post_unauthorized(self):
         vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
-                                        password="test1"))
+                                        password="test1", name="vendor1"))
         form = get_test_post_form()
         p1 = Post.add_post(vendor.id, form)
         self.assertIsNotNone(p1)
@@ -117,11 +122,10 @@ class TestVendorBlueprint(BaseTestCase):
 
 
 
-    def register_vendor(self, email, password):
+    def register_vendor(self, email, password, name):
         return self.client.post(
             "/vendor",
-            data=dict(email=email,
-                      password=password))
+            data=dict(email=email, password=password, name=name))
 
     def get_vendor_post(self, vendor_id, num, token=None):
         if token:
