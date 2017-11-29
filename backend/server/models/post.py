@@ -4,6 +4,7 @@ import datetime
 from server import app, db
 from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
 from sqlalchemy.sql import func, label
+from server.models import Vendor
 
 
 class Post(db.Model):
@@ -21,6 +22,7 @@ class Post(db.Model):
 
     vendor_id = db.Column(
         db.Integer, db.ForeignKey("vendors.id"), nullable=False)
+    vendor = db.relationship("Vendor", back_populates="posts")
 
     def __init__(self, vendor_id, location, lat, lng, time, menu=None):
         self.vendor_id = vendor_id
@@ -62,8 +64,11 @@ class Post(db.Model):
         # Filter the latest post of each vendor
         subquery = db.session.query(
             Post,
-            func.max(Post.posted_on).over(
-                partition_by=Post.vendor_id).label('max')).subquery()
+            Vendor.name,
+            Vendor.email,
+            func.max(Post.posted_on).over(partition_by=Post.vendor_id).label(
+                'max')).join(Vendor).subquery()
+
         latest_posts = db.session.query(subquery).filter(
             subquery.c.max == subquery.c.posted_on)
 
@@ -74,4 +79,5 @@ class Post(db.Model):
         loc_post = func.ll_to_earth(subquery.c.lat, subquery.c.lng)
         dist_func = func.earth_distance(loc, loc_post)
         posts = latest_posts.filter(dist_func <= distance).all()
+
         return posts

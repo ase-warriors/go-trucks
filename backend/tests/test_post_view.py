@@ -6,7 +6,7 @@ from tests.base import BaseTestCase
 class TestPostBlueprint(BaseTestCase):
     def test_get_post_list(self):
         vendor = Vendor.add_vendor(dict(email="test@gmail.com",
-                                        password="pwd"))
+                                        password="pwd", name="vendor"))
         form = dict(location="Columbia University, New York",
                     time="Mon-Fri 10am-5pm",
                     lat=40.8075355,

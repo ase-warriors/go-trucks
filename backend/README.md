@@ -24,6 +24,17 @@ $ python manager.py create_db
 $ python manager.py runserver
 ```
 
+For database scheme changes, must recreate both databases as follows
+```
+$ export APP_SETTINGS="server.config.TestingConfig"
+$ python manager.py drop_db
+$ python manager.py create_db
+$ export APP_SETTINGS="server.config.DevelopmentConfig"
+$ python manager.py drop_db
+$ python manager.py create_db
+```
+
+
 ## Test Server
 
 ```
@@ -42,14 +53,14 @@ $ python manager.py test
 ### Vendor
 * POST /vendor
   * To register a new vendor
-  * {form=dict(email=string, password=string)}
+  * {form=dict(email=string, password=string, name=string)}
   * returns {"status": "success", "id": vendor.id}, 200
   * returns {"status": "failure", "message": "User already exists."}, 202
   * returns {"status": "failure", "message": "Error occurred"}, 401
 
 * GET  /vendor/<int:vendor_id>
   * To obtain vendor information
-  * returns  {"vendor_id": vendor.id, "email": vendor.email, "registered_on": vendor.registered_on}, 200
+  * returns  {"vendor_id": vendor.id, "email": vendor.email, "name": vendor.name, "registered_on": vendor.registered_on}, 200
   * returns {"status": "failure", "message": "Error occurred"}, 401
 
 * POST /vendor/<int:vendor_id>/post
@@ -70,7 +81,7 @@ $ python manager.py test
 * GET  /post?lat=40.8075355&lng=-73.9625727&distance=1.0
   * To get the latest postings near a location within some distance
   * distance: unit in mile
-  * returns \[{"vendor_id", "location", "lat", "lng", "time", "menu"}\], 200
+  * returns \[{"vendor_id", "vendor_name", "location", "lat", "lng", "time", "menu"}\], 200
   * returns {"status": "failure", "message": "Error occurred"}, 402
   * returns {"status": "failure", "message": "Invalid arguments"}, 400
 
@@ -94,10 +105,7 @@ $ python manager.py test
 
   * [x] Save (lattitude, longitude) to model Post; implement query by distance
   * [x] Move geocoder to frontend which passes (location, lattitude, longitude) back to server
-  * [ ] Return only the latest post of all users (within the requested distance) in `get_post_listing` in model Post
+  * [x] Return only the latest post of all users (within the requested distance) in `get_post_listing` in model Post
   * [x] Only the vendor him/herself can see previous posts; customer can only view the lastest one
 
 * Bug fixs
-
-  * [ ] Debug unstable logout?
-  * [ ] Debug latest post?

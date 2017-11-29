@@ -13,12 +13,16 @@ class Vendor(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(500), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, email, password):
+    posts = db.relationship("Post", back_populates="vendor")
+
+    def __init__(self, email, password, name):
         self.email = email
         self.password = bcrypt.generate_password_hash(
             password, app.config.get('BCRYPT_LOG_ROUNDS')).decode()
+        self.name = name
         self.registered_on = datetime.datetime.now()
 
     @staticmethod
@@ -30,7 +34,9 @@ class Vendor(db.Model):
     def add_vendor(form):
         try:
             vendor = Vendor(
-                email=form.get("email"), password=form.get("password"))
+                email=form.get("email"),
+                password=form.get("password"),
+                name=form.get("name"))
             db.session.add(vendor)
             db.session.commit()
         except Exception as e:

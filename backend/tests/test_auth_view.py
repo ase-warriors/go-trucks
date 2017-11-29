@@ -5,7 +5,7 @@ from tests.base import BaseTestCase
 class TestAuthBlueprint(BaseTestCase):
     def test_successful_login(self):
         v = Vendor.add_vendor(dict(email="test1@gmail.com",
-                                   password="test1"))
+                                   password="test1", name="vendor1"))
         with self.client:
             response = self.login_vendor(v.email, "test1")
             self.assertEqual(response.status_code, 200)
@@ -13,7 +13,7 @@ class TestAuthBlueprint(BaseTestCase):
 
     def test_failed_login(self):
         v = Vendor.add_vendor(dict(email="test1@gmail.com",
-                                   password="test1"))
+                                   password="test1", name="vendor1"))
         with self.client:
             response = self.login_vendor(v.email, "wrongpassword")
             self.assertEqual(response.status_code, 404)
@@ -21,7 +21,7 @@ class TestAuthBlueprint(BaseTestCase):
 
     def test_successful_logout(self):
         v = Vendor.add_vendor(dict(email="test1@gmail.com",
-                                   password="test1"))
+                                   password="test1", name="vendor1"))
         token = v.encode_auth_token()
         with self.client:
             response = self.logout_vendor(token)
