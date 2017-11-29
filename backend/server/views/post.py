@@ -39,6 +39,7 @@ class PostsAPI(MethodView):
         for p in posts:
             res.append({
                 "vendor_id": p.vendor_id,
+                "vendor_name": p.name,
                 "location": p.location,
                 "lat": p.lat,
                 "lng": p.lng,

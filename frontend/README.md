@@ -10,15 +10,18 @@ This is a toy project demonstrating the technology framework we are going to use
 ### Build the frontend and backend
 ```bash
 npm install
-npm run build
+npm run-script build
 ```
 
 ### Run the backend
-Please refer to backend documentation [here](https://github.com/ase-warriors/go-trucks/tree/master/backend).
+```bash
+./install_db.sh
+npm run-script run
+```
 
 ### Unit test
 ```bash
-npm test
+./unit_test.sh
 ```
 
 ### Frontend
