@@ -31,3 +31,11 @@ button {
   justify-content: center;
   align-items: center;
 }
+
+#address-validation {
+  display: inline;
+}
+
+#current-posting {
+  display: inline;
+}

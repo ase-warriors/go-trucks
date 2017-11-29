@@ -13,7 +13,7 @@ const MapWithAMarkerClusterer = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyA90PmcPj7JG1hs8-Hu87EBCsQRnk8tsR0&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `600px`, width: `800px`}} />,
+    containerElement: <div style={{ height: `300px`, width: `400px`}} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
   withHandlers({
@@ -38,22 +38,6 @@ const MapWithAMarkerClusterer = compose(
     defaultCenter={{ lat: props.centerLatitude, lng: props.centerLongitude}}
    >
     {currentLocationMarker}
-    <MarkerClusterer
-      onClick={props.onMarkerClustererClick}
-      averageCenter
-      enableRetinaIcons
-      gridSize={60}
-    >
-          {props.markers.map((marker,i) => (
-        <Marker
-          key={marker.latitude + marker.longitude}
-          position={{ lat: marker.latitude, lng: marker.longitude }}
-          label={`${i+1}`}
-          onClick={() => { props.onMarkerClicked(marker.vendor_id)}}
-        />
-      ))}
-
-    </MarkerClusterer>
    </GoogleMap>);
 }
 );

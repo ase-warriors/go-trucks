@@ -13,9 +13,11 @@ class View extends React.Component {
       longitude: -73.9625727,
       latitude: 40.8075355,
       searchDistance: 0,
-    };
+      showVendorDetails: 0,
+    }; // init to be Columbia University Low Library Coords
     this.setCurrentLocation = this.setCurrentLocation.bind(this);
     this.onDistanceSelected = this.onDistanceSelected.bind(this);
+    this.onMarkerClicked = this.onMarkerClicked.bind(this);
     this.hashPosts = this.hashPosts.bind(this);
     this.distances = [0.1, 0.5, 1, 5];
   }
@@ -102,14 +104,19 @@ class View extends React.Component {
     this.setState({searchDistance: intKey})
   }
 
+  onMarkerClicked(vendor_id) {
+    console.log(vendor_id + " is clicked.");
+    this.setState({showVendorDetails: vendor_id})
+  }
   render() {
-    const myMarkers = this.state.posts.map(e => ({longitude: e.lng, latitude: e.lat}));
+    const myMarkers = this.state.posts.map(e => ({longitude: e.lng, latitude: e.lat, vendor_id: e.vendor_id}));
     console.log("map generated with:");
     console.log(this.state.longitude);
     console.log(this.state.latitude);
     const myMap = (
       <MapWithAMarkerClusterer
         markers={myMarkers}
+        onMarkerClicked={this.onMarkerClicked}
         centerLatitude={this.state.latitude}
         centerLongitude={this.state.longitude}
         />);
@@ -117,32 +124,57 @@ class View extends React.Component {
 
     const distance_items = this.distances.map((e, i) => (<MenuItem eventKey={`${i}`} key={`${i}`}>{e+' mi'}</MenuItem>));
     const distanceDropdownButton =
-          (<DropdownButton bsStyle={'primary'} title={'Select Distance'} id={`dropdown-basic`} onSelect={this.onDistanceSelected}>
+          (<DropdownButton bsStyle={'primary'} title={`Search Distance: ${this.distances[this.state.searchDistance]} mi`} id={`dropdown-basic`} onSelect={this.onDistanceSelected}>
            {distance_items}
            </DropdownButton>
           );
+
+    var searchResults = (
+      <div id="search-results">
+        <h3>No Nearby Vendors</h3>
+        <p>Please try to increase the search distance.</p>
+      </div>);
+
+    if (this.state.posts.length > 0) {
+      searchResults = (
+        <div id="search-results">
+          <h3>Found {this.state.posts.length} Nearby Vendors </h3>
+          <div id="post-list-table" key="posts_list" className="posting-list">
+            {this.tableify()}
+          </div>
+        </div>
+      );
+    }
+
+    var vendorDetails = null;
+    if (this.state.showVendorDetails > 0){
+      vendorDetails = (
+        <div id="vendor-details">
+          <h3>Vendor</h3>
+          <p>Showing vendor {this.state.showVendorDetails}</p>
+        </div>);
+    }
+
     return (
       <div className="view">
         <Button onClick={this.setCurrentLocation}>Use Current Location</Button>
         {distanceDropdownButton}
         <div className="horizontal_view">
-        <div className="details">
-          <div id="post-list-table" key="posts_list" className="posting-list">
-
-            {this.tableify()}
+          <div className="details">
+            {searchResults}
+            {vendorDetails}
           </div>
-        </div>
-        <div key="google_map" className="posting-map">{myMap}</div>
+          <div key="google_map" className="posting-map">{myMap}</div>
         </div>
       </div>
     );
   }
 }
 function metricToEmperial(meters) {
-  if (meters < 1609) {
-    return geolib.convertUnit('ft', meters) + ' ft';
+  if (meters < 1609) { // less than a mile
+    return geolib.convertUnit('ft', meters, 0) + ' ft';
   } else {
-    return geolib.convertUnit('mi', meters) + ' mi';
+    return geolib.convertUnit('mi', meters, 1) + ' mi';
   }
 }
 
