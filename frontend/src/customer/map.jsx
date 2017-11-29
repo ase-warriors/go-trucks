@@ -25,25 +25,36 @@ const MapWithAMarkerClusterer = compose(
   }),
   withScriptjs,
   withGoogleMap
-)(props =>
-  <GoogleMap
+)(props => {
+  console.log("mapCenter:"+props.centerLatitude+","+props.centerLongitude);
+  const currentLocationMarker = (
+    <Marker
+       key={'current'}
+      position={{lat: props.centerLatitude, lng: props.centerLongitude}}
+      icon={{path:google.maps.SymbolPath.CIRCLE, scale: 6}}
+    />);
+  return (<GoogleMap
     defaultZoom={14}
-    defaultCenter={{ lat: 40.8075355, lng: -73.9625727}}
-  >
+    defaultCenter={{ lat: props.centerLatitude, lng: props.centerLongitude}}
+   >
+    {currentLocationMarker}
     <MarkerClusterer
       onClick={props.onMarkerClustererClick}
       averageCenter
       enableRetinaIcons
       gridSize={60}
     >
-      {props.markers.map(marker => (
+          {props.markers.map((marker,i) => (
         <Marker
           key={marker.latitude + marker.longitude}
           position={{ lat: marker.latitude, lng: marker.longitude }}
+          label={`${i+1}`}
         />
       ))}
+
     </MarkerClusterer>
-   </GoogleMap>
+   </GoogleMap>);
+}
 );
 
 module.exports = MapWithAMarkerClusterer
