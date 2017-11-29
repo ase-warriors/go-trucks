@@ -34,19 +34,19 @@ const PlacesWithStandaloneSearchBox = compose(
   }),
   withScriptjs  
 )(props =>
-  <div data-standalone-searchbox="" className = "form-group">
+  (<div data-standalone-searchbox="" className = "form-group">
     <StandaloneSearchBox
       ref={props.onSearchBoxMounted}
       bounds={props.bounds}
       onPlacesChanged={props.onPlacesChanged}
     >
-      <input
+       <input
         type="text"
         placeholder="e.g. 2920 Broadway, New York"
         className="form-control"
       />
     </StandaloneSearchBox>
-  </div>
+   </div>)
  );
 
 module.exports =  PlacesWithStandaloneSearchBox;

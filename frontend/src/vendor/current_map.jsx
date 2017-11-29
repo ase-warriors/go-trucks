@@ -13,7 +13,7 @@ const MapWithAMarkerClusterer = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyA90PmcPj7JG1hs8-Hu87EBCsQRnk8tsR0&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `300px`, width: `400px`}} />,
+    containerElement: <div style={{ height: `400px`, width: `600px`}} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
   withHandlers({
@@ -27,15 +27,21 @@ const MapWithAMarkerClusterer = compose(
   withGoogleMap
 )(props => {
   console.log("mapCenter:"+props.centerLatitude+","+props.centerLongitude);
+  var myfunc = props.notifyCoordinatesFromMap;
   const currentLocationMarker = (
     <Marker
-       key={'current'}
+      key={'current'}
       position={{lat: props.centerLatitude, lng: props.centerLongitude}}
       icon={{path:google.maps.SymbolPath.CIRCLE, scale: 6}}
+      draggable={props.draggable}
+      onPositionChanged={function () {
+        myfunc(this.position.lat(), this.position.lng());
+      }}
     />);
   return (<GoogleMap
     defaultZoom={14}
-    defaultCenter={{ lat: props.centerLatitude, lng: props.centerLongitude}}
+          defaultCenter={{ lat: props.centerLatitude, lng: props.centerLongitude}}
+          center={{ lat: props.centerLatitude, lng: props.centerLongitude}}
    >
     {currentLocationMarker}
    </GoogleMap>);

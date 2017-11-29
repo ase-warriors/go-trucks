@@ -33,9 +33,11 @@ const MapWithAMarkerClusterer = compose(
       position={{lat: props.centerLatitude, lng: props.centerLongitude}}
       icon={{path:google.maps.SymbolPath.CIRCLE, scale: 6}}
     />);
-  return (<GoogleMap
-    defaultZoom={14}
-    defaultCenter={{ lat: props.centerLatitude, lng: props.centerLongitude}}
+  return (
+    <GoogleMap
+      defaultZoom={14}
+      defaultCenter={{ lat: props.centerLatitude, lng: props.centerLongitude}}
+      center={{ lat: props.centerLatitude, lng: props.centerLongitude}}
    >
     {currentLocationMarker}
     <MarkerClusterer
