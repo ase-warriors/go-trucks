@@ -44,9 +44,10 @@ class Create extends React.Component {
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
         if (parsedMessage.status == "success") {
+          window.alert('Post Successful!')
           this.getPosts();
         } else {
-          console.log("post failed")
+          window.alert('Post Failed!')
         }
       });
 

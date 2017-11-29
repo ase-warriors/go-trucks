@@ -7,6 +7,7 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      name: "",
       email: "",
       password: "",
       repassword: "",
@@ -32,7 +33,7 @@ class Register extends React.Component {
     d3.request("/vendor")
       .header("X-Requested-With", "XMLHttpRequest")
       .header("Content-Type", "application/x-www-form-urlencoded")
-      .post(`email=${this.state.email}&password=${this.state.password}`, (err, data) => {
+      .post(`email=${this.state.email}&password=${this.state.password}&name=${this.state.name}`, (err, data) => {
         console.log('register returned');
         console.log(data);
 
@@ -58,10 +59,17 @@ class Register extends React.Component {
       <div className="Register">
         <h3>Vendor Registeration</h3>
         <form onSubmit={this.handleSubmit}>
+          <FormGroup controlId="name" bsSize="large">
+            <ControlLabel>Name</ControlLabel>
+            <FormControl
+              type="name"
+              value={this.state.name}
+              onChange={this.handleChange}
+            />
+          </FormGroup>
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>
             <FormControl
-              id="register-email"
               type="email"
               value={this.state.email}
               onChange={this.handleChange}
@@ -70,7 +78,6 @@ class Register extends React.Component {
           <FormGroup controlId="password" bsSize="large">
             <ControlLabel>Password</ControlLabel>
             <FormControl
-              id="register-password"
               value={this.state.password}
               onChange={this.handleChange}
               type="password"
@@ -79,7 +86,6 @@ class Register extends React.Component {
           <FormGroup controlId="repassword" bsSize="large">
             <ControlLabel>Confirm Password</ControlLabel>
             <FormControl
-              id="register-repassword"
               value={this.state.repassword}
               onChange={this.handleChange}
               type="password"
@@ -88,7 +94,6 @@ class Register extends React.Component {
           <Button
             block
             bsSize="large"
-            id="register-submit"
             disabled={!this.validateForm()}
             type="submit"
           >
