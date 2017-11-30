@@ -12,7 +12,7 @@ class View extends React.Component {
       posts: [],
       longitude: -73.9625727,
       latitude: 40.8075355,
-      searchDistance: 4,
+      searchDistance: 1,
       showVendorDetails: 0,
       vendorDetailPosts: [],
     }; // init to be Columbia University Low Library Coords
@@ -20,7 +20,7 @@ class View extends React.Component {
     this.onDistanceSelected = this.onDistanceSelected.bind(this);
     this.onVendorSelected = this.onVendorSelected.bind(this);
     this.hashPosts = this.hashPosts.bind(this);
-    this.distances = [0.1, 0.5, 1, 5, 10];
+    this.distances = [0.1, 0.5, 1, 2, 5, 10];
   }
   setCurrentLocation() {
     window.alert(`Using user's current location`);
@@ -74,10 +74,22 @@ class View extends React.Component {
       .get((res) => {
         const parsedMessage = JSON.parse(res.response);
         if (parsedMessage && this.hashPosts(this.state.posts) !== this.hashPosts(parsedMessage)) {
-          console.log(this.hashPosts(parsedMessage));
-          console.log(this.hashPosts(this.state.posts));
+
+          // process the posts
+
+          const sortedPosts = parsedMessage.map(post => {
+            post.distance = metricToEmperial(geolib.getDistance({
+              latitude: post.lat,
+              longitude: post.lng
+              },{
+                latitude: this.state.latitude,
+                longitude: this.state.longitude
+              },10,1));
+            return post
+          });
+          sortedPosts.sort((a,b) => (a.distance-b.distance));
           this.setState({
-            posts: parsedMessage
+            posts: sortedPosts,
           });
         } else {
           if (this.hashPosts(this.state.posts) === this.hashPosts(parsedMessage))
@@ -93,13 +105,7 @@ class View extends React.Component {
         <tr key={e.vendor_id} onClick={() => this.onVendorSelected(e.vendor_id)}>
           <td>{`${i+1}`}</td>
           <td>{e.vendor_name}</td>
-          <td>{metricToEmperial(geolib.getDistance({
-              latitude: e.lat,
-              longitude: e.lng
-              },{
-                latitude: this.state.latitude,
-                longitude: this.state.longitude
-            },10,1))}</td>
+          <td>{e.distance}</td>
         </tr>
       );
     })
@@ -138,15 +144,14 @@ class View extends React.Component {
   }
   render() {
     const myMarkers = this.state.posts.map(e => ({longitude: e.lng, latitude: e.lat, vendor_id: e.vendor_id, name: e.vendor_name}));
-    console.log("map generated with:");
-    console.log(this.state.longitude);
-    console.log(this.state.latitude);
+
     const myMap = (
       <MapWithAMarkerClusterer
         markers={myMarkers}
         onMarkerClicked={this.onVendorSelected}
         centerLatitude={this.state.latitude}
         centerLongitude={this.state.longitude}
+        circleRadius={imperialToMetric(this.distances[this.state.searchDistance])}
         />);
 
 
@@ -207,6 +212,10 @@ function metricToEmperial(meters) {
   } else {
     return geolib.convertUnit('mi', meters, 1) + ' mi';
   }
+}
+
+function imperialToMetric(mi) {
+  return mi*1609.344;
 }
 
 module.exports = View;
