@@ -105,7 +105,7 @@ class Home extends React.Component {
     var logoutItem = null;
     var actionItems = null;
     var registerItem = null;
-    const navbarInstance = (<MyNavbar key={4} loggedin={this.state.login === "" ? false : true} onClickLogout={this.onClickLogout} onClickRegister={this.onClickRegister} onClickToggleVendorViewAsCustomer={this.onClickToggleVendorViewAsCustomer} viewAsCustomer={this.state.vendorViewAsCustomer} onClickToggleAboutPage={this.onClickToggleAboutPage}/>);
+    const navbarInstance = (<MyNavbar key={4} loggedin={this.state.login === "" ? false : true} onClickLogout={this.onClickLogout} onClickRegister={this.onClickRegister} onClickToggleVendorViewAsCustomer={this.onClickToggleVendorViewAsCustomer} viewAsCustomer={this.state.vendorViewAsCustomer} onClickToggleAboutPage={this.onClickToggleAboutPage} inAbout={this.state.aboutPage}/>);
     const loginPage = (<Login key={0}
                        onUserLogin={this.onUserLogin}/>);
     const createPage = (<Create key={1} token={this.state.login} vendorID={this.state.vendorID}/>);

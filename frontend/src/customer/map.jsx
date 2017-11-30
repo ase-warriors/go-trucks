@@ -1,12 +1,15 @@
 import React from "react";
 const fetch = require("isomorphic-fetch");
-const { compose, withProps, withHandlers } = require("recompose");
+const { compose, withProps, withHandlers,withStateHandlers } = require("recompose");
 const {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
   Marker,
 } = require("react-google-maps");
+
+const { InfoBox } = require("react-google-maps/lib/components/addons/InfoBox");
+
 const { MarkerClusterer } = require("react-google-maps/lib/components/addons/MarkerClusterer");
 
 const MapWithAMarkerClusterer = compose(
@@ -23,6 +26,13 @@ const MapWithAMarkerClusterer = compose(
       console.log(clickedMarkers)
     },
   }),
+  withStateHandlers(() => ({
+    isOpen: false,
+  }), {
+    onToggleOpen: ({ isOpen }) => () => ({
+      isOpen: !isOpen,
+    })
+  }),
   withScriptjs,
   withGoogleMap
 )(props => {
@@ -32,7 +42,8 @@ const MapWithAMarkerClusterer = compose(
        key={'current'}
       position={{lat: props.centerLatitude, lng: props.centerLongitude}}
       icon={{path:google.maps.SymbolPath.CIRCLE, scale: 6}}
-    />);
+      />);
+  console.log('isOpen?:' + props.isOpen);
   return (
     <GoogleMap
       defaultZoom={14}
@@ -51,8 +62,17 @@ const MapWithAMarkerClusterer = compose(
           key={marker.latitude + marker.longitude}
           position={{ lat: marker.latitude, lng: marker.longitude }}
           label={`${i+1}`}
-          onClick={() => { props.onMarkerClicked(marker.vendor_id)}}
-        />
+          onClick={() => { props.onMarkerClicked(marker.vendor_id); props.onToggleOpen();}}
+          >
+          {props.isOpen && <InfoBox
+        onCloseClick={props.onToggleOpen}
+        options={{ closeBoxURL: ``, enableEventPropagation: true }}
+      >
+        <div style={{ backgroundColor: `white`, opacity: 0.75, padding: `16px` }}>
+            <p>{marker.name}</p>
+        </div>
+      </InfoBox>}
+        </Marker>
       ))}
 
     </MarkerClusterer>

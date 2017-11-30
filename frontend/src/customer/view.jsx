@@ -137,7 +137,7 @@ class View extends React.Component {
     d3.request(`/`)
   }
   render() {
-    const myMarkers = this.state.posts.map(e => ({longitude: e.lng, latitude: e.lat, vendor_id: e.vendor_id}));
+    const myMarkers = this.state.posts.map(e => ({longitude: e.lng, latitude: e.lat, vendor_id: e.vendor_id, name: e.vendor_name}));
     console.log("map generated with:");
     console.log(this.state.longitude);
     console.log(this.state.latitude);
