@@ -36,7 +36,7 @@ class View extends React.Component {
   }
 
   hashPosts(post) {
-    return post.reduce((acc, v, i) => acc*(1+v.vendor_id), 1);
+    return post.reduce((acc, v, i) => acc*(1+v.vendor_id*v.distance), 1);
   }
   getVendorPosts(vendor_id) {
     if (vendor_id == 0) {
@@ -73,26 +73,24 @@ class View extends React.Component {
       .header("Content-Type", "application/x-www-form-urlencoded")
       .get((res) => {
         const parsedMessage = JSON.parse(res.response);
-        if (parsedMessage && this.hashPosts(this.state.posts) !== this.hashPosts(parsedMessage)) {
-
-          // process the posts
-
-          const sortedPosts = parsedMessage.map(post => {
-            post.distance = metricToEmperial(geolib.getDistance({
+        var sortedPosts = parsedMessage.map(post => {
+            post.distance = geolib.getDistance({
               latitude: post.lat,
               longitude: post.lng
               },{
                 latitude: this.state.latitude,
                 longitude: this.state.longitude
-              },10,1));
+              },10,1);
             return post
           });
           sortedPosts.sort((a,b) => (a.distance-b.distance));
+        if (parsedMessage && this.hashPosts(this.state.posts) !== this.hashPosts(sortedPosts)) {
+          // process the posts
           this.setState({
             posts: sortedPosts,
           });
         } else {
-          if (this.hashPosts(this.state.posts) === this.hashPosts(parsedMessage))
+          if (this.hashPosts(this.state.posts) === this.hashPosts(sortedPosts))
             console.log('skip getPosts');
           else
             console.log('get posts failed');
@@ -105,7 +103,7 @@ class View extends React.Component {
         <tr key={e.vendor_id} onClick={() => this.onVendorSelected(e.vendor_id)}>
           <td>{`${i+1}`}</td>
           <td>{e.vendor_name}</td>
-          <td>{e.distance}</td>
+          <td>{metricToEmperial(e.distance)}</td>
         </tr>
       );
     })
