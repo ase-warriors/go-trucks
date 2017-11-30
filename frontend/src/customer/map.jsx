@@ -46,7 +46,7 @@ const MapWithAMarkerClusterer = compose(
   console.log('isOpen?:' + props.isOpen);
   return (
     <GoogleMap
-      defaultZoom={14}
+      defaultZoom={15}
       defaultCenter={{ lat: props.centerLatitude, lng: props.centerLongitude}}
       center={{ lat: props.centerLatitude, lng: props.centerLongitude}}
    >
@@ -64,14 +64,6 @@ const MapWithAMarkerClusterer = compose(
           label={`${i+1}`}
           onClick={() => { props.onMarkerClicked(marker.vendor_id); props.onToggleOpen();}}
           >
-          {props.isOpen && <InfoBox
-        onCloseClick={props.onToggleOpen}
-        options={{ closeBoxURL: ``, enableEventPropagation: true }}
-      >
-        <div style={{ backgroundColor: `white`, opacity: 0.75, padding: `16px` }}>
-            <p>{marker.name}</p>
-        </div>
-      </InfoBox>}
         </Marker>
       ))}
 

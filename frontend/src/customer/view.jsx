@@ -12,7 +12,7 @@ class View extends React.Component {
       posts: [],
       longitude: -73.9625727,
       latitude: 40.8075355,
-      searchDistance: 0,
+      searchDistance: 4,
       showVendorDetails: 0,
       vendorDetailPosts: [],
     }; // init to be Columbia University Low Library Coords
@@ -20,7 +20,7 @@ class View extends React.Component {
     this.onDistanceSelected = this.onDistanceSelected.bind(this);
     this.onVendorSelected = this.onVendorSelected.bind(this);
     this.hashPosts = this.hashPosts.bind(this);
-    this.distances = [0.1, 0.5, 1, 5];
+    this.distances = [0.1, 0.5, 1, 5, 10];
   }
   setCurrentLocation() {
     window.alert(`Using user's current location`);
