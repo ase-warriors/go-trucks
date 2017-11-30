@@ -22,7 +22,11 @@ class MyNavbar extends React.Component {
         registerItem = (<NavItem id="vendor-portal" onClick={this.props.onClickRegister} eventKey={5}>Vendor Portal</NavItem>);
       }
 
-
+      if (this.props.inAbout) {
+        registerItem = null;
+        logoutItem = null;
+        toggleVendorViewAsCustomerItem = null;
+      }
       const navbarInstance = (
         <Navbar>
           <Navbar.Header>
