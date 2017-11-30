@@ -1,5 +1,5 @@
 import React from "react";
-import { Well, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Tooltip, Popover, OverlayTrigger, Well, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
 const d3 = require("d3");
 const PlacesWithStandaloneSearchBox = require("./searchbox.jsx");
@@ -19,6 +19,7 @@ class Create extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      profile: null,
       location: "",
       lng: -73.9625727,
       lat: 40.8075355,
@@ -29,11 +30,13 @@ class Create extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.onClickSubmit = this.onClickSubmit.bind(this);
     this.getPosts = this.getPosts.bind(this);
+    this.getProfile = this.getProfile.bind(this);
     this.notifyCoordinates = this.notifyCoordinates.bind(this);
     this.notifyCoordinatesFromMap = this.notifyCoordinatesFromMap.bind(this);
   }
   componentDidMount() {
     this.getPosts();
+    this.getProfile()
   }
   onClickSubmit(event) {
     d3.request(`/vendor/${this.props.vendorID}/post`)
@@ -47,6 +50,7 @@ class Create extends React.Component {
         if (parsedMessage.status == "success") {
           window.alert('Post Successful!')
           this.getPosts();
+          this.getProfile();
         } else {
           window.alert('Post Failed!')
         }
@@ -59,6 +63,25 @@ class Create extends React.Component {
       [event.target.id]: event.target.value
     });
   };
+  getProfile() {
+    console.log('getProfile called');
+    d3.request(`/vendor/${this.props.vendorID}`)
+      .header("X-Requested-With", "XMLHttpRequest")
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .header("Authorization", this.props.token)
+      .get((res) => {
+        console.log("getProfile got get response");
+        const parsedMessage = JSON.parse(res.response);
+        if (parsedMessage) {
+          console.log("vendor profile" + JSON.stringify(parsedMessage));
+          this.setState({
+            profile: parsedMessage,
+          });
+        } else {
+          console.log('get posts failed');
+        }
+      });
+  }
   getPosts() {
     d3.request(`/vendor/${this.props.vendorID}/post`)
       .header("X-Requested-With", "XMLHttpRequest")
@@ -73,6 +96,7 @@ class Create extends React.Component {
             post: parsedMessage,
             lng: parsedMessage[0].lng,
             lat: parsedMessage[0].lat,
+            menu: parsedMessage[0].menu,
           });
         } else {
           console.log('get posts failed');
@@ -108,11 +132,17 @@ class Create extends React.Component {
   render() {
     const selectMap = (<CurrentMap centerLatitude={this.state.lat} centerLongitude={this.state.lng} draggable={true} notifyCoordinatesFromMap={this.notifyCoordinatesFromMap}/>);
 
+    const hoverOverSubmit = (
+      <Tooltip id="tooltip">
+        <strong>Go ahead and post it!</strong>
+      </Tooltip>
+    );
+
     const formInstance = (
       <form onSubmit = {this.onClickSubmit}>
         <FieldGroup
           id="time"
-          label="Enter Schedule (expected hours)"
+          label={`Enter Schedule (expected hours)*`}
           placeholder={'e.g. 12pm to 5pm'}
           onChange={this.handleChange}
           />
@@ -124,13 +154,15 @@ class Create extends React.Component {
         <FieldGroup
           id="menu"
           label="Enter Descriptions (special menu, etc.)"
-          placeholder={'e.g. Chicken Over Rice'}
           onChange={this.handleChange}
+          placeholder={this.state.menu}
           />
         <FormGroup>
+          <OverlayTrigger placement="top" overlay={hoverOverSubmit}>
           <Button type="submit" disabled={this.state.lng==0.0 || this.state.time===""}>
             Submit
           </Button>
+          </OverlayTrigger>
         </FormGroup>
       </form>
     );
@@ -140,7 +172,7 @@ class Create extends React.Component {
           <p>Last Posting Time: N/A</p>
           <p>Last Posting Menu: N/A</p>
         </Well>);
-    var currentPostMap = (<CurrentMap centerLatitude={0} centerLongitude={0} draggable={false}/>);
+
     if (this.state.post !== null && this.state.post.length > 0){
       currentPost = (
         <Well>
@@ -151,15 +183,28 @@ class Create extends React.Component {
           <h4>Last Posting Menu</h4>
           <p>{this.state.post[0].menu}</p>
         </Well>);
-      currentPostMap =  (<CurrentMap centerLatitude={this.state.post[0].lat} centerLongitude={this.state.post[0].lng} draggable={false}/>);
+    }
+
+    var profileBlock = null;
+    var name="";
+    if (this.state.profile != null) {
+      profileBlock =
+        (<Well>
+         <h4>Email</h4>
+         <p>{this.state.profile.email}</p>
+         <h4>Registered on</h4>
+         <p>{this.state.profile.registered_on}</p>
+         </Well>);
+      name=this.state.profile.name
     }
 
     return (
       <div className="Create">
+        <h2>Hello <strong>{name}</strong>!</h2>
+        {profileBlock}
         <h2>Current Posting</h2>
         <div id="current-posting">
              {currentPost}
-             {currentPostMap}
         </div>
         <h2>Create Posting</h2>
         <div>{formInstance}</div>
