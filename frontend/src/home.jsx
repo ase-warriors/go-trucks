@@ -108,9 +108,9 @@ class Home extends React.Component {
         </div>
       );
       pageElements.push(registerLoginPage);
-    } else if (this.state.login == "") { // direct to vendor
+    } else if (this.state.login == "") { // direct to customer
       pageElements.push(viewPage);
-    } else { // direct to customer
+    } else { // direct to vendor
       pageElements.push(createPage);
     }
 

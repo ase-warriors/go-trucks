@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button, FormGroup, FormControl, ControlLabel, DropdownButton,MenuItem } from "react-bootstrap";
+import { Table, Button, FormGroup, FormControl, ControlLabel, DropdownButton,MenuItem, Well} from "react-bootstrap";
 const MapWithAMarkerClusterer = require("./map.jsx");
 const d3 = require("d3");
 const geolib = require("geolib");
@@ -14,10 +14,11 @@ class View extends React.Component {
       latitude: 40.8075355,
       searchDistance: 0,
       showVendorDetails: 0,
+      vendorDetailPosts: [],
     }; // init to be Columbia University Low Library Coords
     this.setCurrentLocation = this.setCurrentLocation.bind(this);
     this.onDistanceSelected = this.onDistanceSelected.bind(this);
-    this.onMarkerClicked = this.onMarkerClicked.bind(this);
+    this.onVendorSelected = this.onVendorSelected.bind(this);
     this.hashPosts = this.hashPosts.bind(this);
     this.distances = [0.1, 0.5, 1, 5];
   }
@@ -37,6 +38,34 @@ class View extends React.Component {
   hashPosts(post) {
     return post.reduce((acc, v, i) => acc*(1+v.vendor_id), 1);
   }
+  getVendorPosts(vendor_id) {
+    if (vendor_id == 0) {
+      console.error('no vendor selected!');
+    } else if (this.state.posts.length == 0) {
+      console.error('no vendor exists yet!');
+    }
+
+    for (var i=0; i < this.state.posts.length; i++) {
+      if (this.state.posts[i].vendor_id == vendor_id) {
+        const vendorInfo = this.state.posts[i];
+        console.log(vendorInfo);
+        const vendorInformationBox = (
+          <Well>
+            <h4>Vendor Name</h4>
+            <p>{vendorInfo.vendor_name}</p>
+            <h4>Vendor Schedule</h4>
+            <p>{vendorInfo.time}</p>
+            <h4>Vendor Location</h4>
+            <p>{vendorInfo.location === "" ? "N/A" : vendorInfo.location}</p>
+            <h4>Vendor Menu</h4>
+            <p>{vendorInfo.hasOwnProperty('menu') ? vendorInfo.menu : "N/A"}</p>
+          </Well>
+        );
+        return vendorInformationBox;
+      }
+    }
+    console.error('vendor id not found');
+  }
   getPosts() {
     console.log('getPosts called!');
     d3.request(`/post?lat=${this.state.latitude}&lng=${this.state.longitude}&distance=${this.distances[this.state.searchDistance]}`)
@@ -51,17 +80,17 @@ class View extends React.Component {
             posts: parsedMessage
           });
         } else {
-          console.log('get posts failed');
-          console.log(parsedMessage);
-          console.log(this.state.posts);
+          if (this.hashPosts(this.state.posts) === this.hashPosts(parsedMessage))
+            console.log('skip getPosts');
+          else
+            console.log('get posts failed');
         }
       });
   }
-
   tableify() {
     const tableBody = this.state.posts.map((e,i)=> {
       return (
-        <tr key={e.vendor_id}>
+        <tr key={e.vendor_id} onClick={() => this.onVendorSelected(e.vendor_id)}>
           <td>{`${i+1}`}</td>
           <td>{e.vendor_name}</td>
           <td>{metricToEmperial(geolib.getDistance({
@@ -71,18 +100,16 @@ class View extends React.Component {
                 latitude: this.state.latitude,
                 longitude: this.state.longitude
             },10,1))}</td>
-          <td>{e.time} min later</td>
         </tr>
       );
     })
     return (
-      <Table striped bordered condensed hover>
+      <Table striped bordered condensed hover responsive>
         <thead>
           <tr>
             <th>Results</th>
             <th>Vendor Name</th>
             <th>Distance</th>
-            <th>Posting Time</th>
           </tr>
         </thead>
         <tbody>
@@ -101,12 +128,13 @@ class View extends React.Component {
 
   onDistanceSelected(key) {
     const intKey = parseInt(key)
-    this.setState({searchDistance: intKey})
+    this.setState({searchDistance: intKey, showVendorDetails: 0})
   }
 
-  onMarkerClicked(vendor_id) {
+  onVendorSelected(vendor_id) {
     console.log(vendor_id + " is clicked.");
     this.setState({showVendorDetails: vendor_id})
+    d3.request(`/`)
   }
   render() {
     const myMarkers = this.state.posts.map(e => ({longitude: e.lng, latitude: e.lat, vendor_id: e.vendor_id}));
@@ -116,7 +144,7 @@ class View extends React.Component {
     const myMap = (
       <MapWithAMarkerClusterer
         markers={myMarkers}
-        onMarkerClicked={this.onMarkerClicked}
+        onMarkerClicked={this.onVendorSelected}
         centerLatitude={this.state.latitude}
         centerLongitude={this.state.longitude}
         />);
@@ -150,9 +178,12 @@ class View extends React.Component {
     if (this.state.showVendorDetails > 0){
       vendorDetails = (
         <div id="vendor-details">
-          <h3>Vendor</h3>
-          <p>Showing vendor {this.state.showVendorDetails}</p>
+          <h3>Vendor Details</h3>
+          <div id="vendor-details-well">
+            {this.getVendorPosts(this.state.showVendorDetails)}
+          </div>
         </div>);
+
     }
 
     return (

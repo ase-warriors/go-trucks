@@ -3,7 +3,7 @@ import { Well, Button, FormGroup, FormControl, ControlLabel } from "react-bootst
 
 const d3 = require("d3");
 const PlacesWithStandaloneSearchBox = require("./searchbox.jsx");
-const CurrentMap = require("./current_map.jsx");
+const CurrentMap = require("./vendor_map.jsx");
 
 function FieldGroup(props) {
   const {id, type, label, placeholder, onChange} = props;
@@ -22,7 +22,7 @@ class Create extends React.Component {
       location: "",
       lng: -73.9625727,
       lat: 40.8075355,
-      time:"0",
+      time:"",
       post:null,
       menu:"",
     }; // defaults to Columbia
@@ -68,9 +68,11 @@ class Create extends React.Component {
         console.log(res.response)
         const parsedMessage = JSON.parse(res.response);
         console.log(parsedMessage)
-        if (parsedMessage) {
+        if (parsedMessage && parsedMessage.length > 0) {
           this.setState({
             post: parsedMessage,
+            lng: parsedMessage[0].lng,
+            lat: parsedMessage[0].lat,
           });
         } else {
           console.log('get posts failed');
@@ -108,16 +110,12 @@ class Create extends React.Component {
 
     const formInstance = (
       <form onSubmit = {this.onClickSubmit}>
-        <FormGroup controlId="time">
-          <ControlLabel>Choose Posting Time</ControlLabel>
-          <FormControl componentClass="select" placeholder="Select Posting Time" onChange={this.handleChange}>
-            <option value="0">Now</option>
-            <option value="15">15 min later</option>
-            <option value="30">30 min later</option>
-            <option value="60">1 hr later</option>
-            <option value="180">3 hrs later</option>
-          </FormControl>
-        </FormGroup>
+        <FieldGroup
+          id="time"
+          label="Enter Schedule (expected hours)"
+          placeholder={'e.g. 12pm to 5pm'}
+          onChange={this.handleChange}
+          />
         <label className="control-label">Enter Posting Location</label>
         <div id="address-validation">
           <PlacesWithStandaloneSearchBox notifyCoordinates = {this.notifyCoordinates}/>
@@ -130,7 +128,7 @@ class Create extends React.Component {
           onChange={this.handleChange}
           />
         <FormGroup>
-          <Button type="submit" disabled={this.state.lng==0.0}>
+          <Button type="submit" disabled={this.state.lng==0.0 || this.state.time===""}>
             Submit
           </Button>
         </FormGroup>
@@ -149,7 +147,7 @@ class Create extends React.Component {
           <h4>Last Posting Location</h4>
           <p>{this.state.post[0].location}</p>
           <h4>Last Posting Time</h4>
-          <p>{this.state.post[0].time} minutes later</p>
+          <p>{this.state.post[0].time}</p>
           <h4>Last Posting Menu</h4>
           <p>{this.state.post[0].menu}</p>
         </Well>);

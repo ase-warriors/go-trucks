@@ -9,7 +9,7 @@ const {
 } = require("react-google-maps");
 const { MarkerClusterer } = require("react-google-maps/lib/components/addons/MarkerClusterer");
 
-const MapWithAMarkerClusterer = compose(
+const VendorMap = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyA90PmcPj7JG1hs8-Hu87EBCsQRnk8tsR0&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
@@ -34,7 +34,7 @@ const MapWithAMarkerClusterer = compose(
       position={{lat: props.centerLatitude, lng: props.centerLongitude}}
       icon={{path:google.maps.SymbolPath.CIRCLE, scale: 6}}
       draggable={props.draggable}
-      onPositionChanged={function () {
+      onDragEnd={function () {
         myfunc(this.position.lat(), this.position.lng());
       }}
     />);
@@ -48,4 +48,4 @@ const MapWithAMarkerClusterer = compose(
 }
 );
 
-module.exports = MapWithAMarkerClusterer
+module.exports = VendorMap
