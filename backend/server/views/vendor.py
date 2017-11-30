@@ -117,7 +117,7 @@ vendor_bp.add_url_rule(
     "", view_func=VendorsAPI.as_view("vendors_api"), methods=["GET", "POST"])
 vendor_bp.add_url_rule(
     "/<int:vendor_id>",
-    view_func=VendorsAPI.as_view("vendor_api"),
+    view_func=VendorAPI.as_view("vendor_api"),
     methods=["GET"])
 vendor_bp.add_url_rule(
     "/<int:vendor_id>/post",

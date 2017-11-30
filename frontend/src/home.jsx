@@ -5,6 +5,7 @@ const Create = require('./vendor/create.jsx');
 const Register = require('./vendor/register.jsx');
 const View = require('./customer/view.jsx')
 const MyNavbar = require('./mynavbar.jsx');
+const About = require('./about.jsx');
 
 const d3 = require('d3');
 class Home extends React.Component {
@@ -14,6 +15,8 @@ class Home extends React.Component {
       login: "",
       vendorID: "",
       registerlogin: false,
+      vendorViewAsCustomer: false,
+      aboutPage: false,
     };
 
     if (document.cookie !== "") {
@@ -26,6 +29,10 @@ class Home extends React.Component {
     this.onClickLogout = this.onClickLogout.bind(this);
     this.onFinishRegister = this.onFinishRegister.bind(this);
     this.onClickRegister = this.onClickRegister.bind(this);
+    this.onClickToggleVendorViewAsCustomer =
+      this.onClickToggleVendorViewAsCustomer.bind(this);
+    this.onClickToggleAboutPage =
+      this.onClickToggleAboutPage.bind(this);
   }
   componentDidMount() {
     return
@@ -45,6 +52,16 @@ class Home extends React.Component {
     });
   }
 
+  onClickToggleVendorViewAsCustomer() {
+    const b = this.state.vendorViewAsCustomer;
+    this.setState({vendorViewAsCustomer: !b});
+  }
+
+  onClickToggleAboutPage() {
+    const b = this.state.aboutPage;
+    this.setState({aboutPage: !b});
+  }
+  
   onClickLogout() {
     console.log('logging out');
     d3.request("/auth/logout")
@@ -88,7 +105,7 @@ class Home extends React.Component {
     var logoutItem = null;
     var actionItems = null;
     var registerItem = null;
-    const navbarInstance = (<MyNavbar key={4} loggedin={this.state.login === "" ? false : true} onClickLogout={this.onClickLogout} onClickRegister={this.onClickRegister}/>);
+    const navbarInstance = (<MyNavbar key={4} loggedin={this.state.login === "" ? false : true} onClickLogout={this.onClickLogout} onClickRegister={this.onClickRegister} onClickToggleVendorViewAsCustomer={this.onClickToggleVendorViewAsCustomer} viewAsCustomer={this.state.vendorViewAsCustomer} onClickToggleAboutPage={this.onClickToggleAboutPage}/>);
     const loginPage = (<Login key={0}
                        onUserLogin={this.onUserLogin}/>);
     const createPage = (<Create key={1} token={this.state.login} vendorID={this.state.vendorID}/>);
@@ -96,11 +113,16 @@ class Home extends React.Component {
     const registerPage = (<Register key={2} finish={this.onFinishRegister}/>);
 
     const viewPage = (<View key={5}/>);
+    const aboutPage = (<About key={6}/>);
     const pageElements = [];
 
     pageElements.push(navbarInstance);
     console.log(this.state)
-    if (this.state.registerlogin) {
+
+    if (this.state.aboutPage) {
+      pageElements.push(aboutPage);
+    }
+    else if (this.state.registerlogin) {
       const registerLoginPage = (
         <div key={5}>
           {loginPage}
@@ -108,7 +130,7 @@ class Home extends React.Component {
         </div>
       );
       pageElements.push(registerLoginPage);
-    } else if (this.state.login == "") { // direct to customer
+    } else if (this.state.login == "" || this.state.vendorViewAsCustomer) { // direct to customer
       pageElements.push(viewPage);
     } else { // direct to vendor
       pageElements.push(createPage);
