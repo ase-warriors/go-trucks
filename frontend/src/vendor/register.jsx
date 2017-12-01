@@ -1,16 +1,18 @@
-import React from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-
-const d3 = require("d3");
+/* eslint-env browser */
+const React = require('react');
+const {
+  Button, FormGroup, FormControl, ControlLabel,
+} = require('react-bootstrap');
+const d3 = require('d3');
 
 class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
-      email: "",
-      password: "",
-      repassword: "",
+      name: '',
+      email: '',
+      password: '',
+      repassword: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -18,33 +20,30 @@ class Register extends React.Component {
 
   validateForm() {
     console.log(this.state)
-    return this.state.password == this.state.repassword && this.state.email !== "" && this.state.password !== "";
+    return this.state.password === this.state.repassword && this.state.email !== '' && this.state.password !== '';
   }
 
   handleChange(event) {
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
     });
-  };
+  }
 
   handleSubmit(event) {
-    // var myRequest = new Request('/vendor', {method: 'POST', body: '{"foo":"bar"}'});
+    // var myRequest = new Request('/vendor', {method: 'POST', body: '{'foo':'bar'}'});
 
-    d3.request("/vendor")
-      .header("X-Requested-With", "XMLHttpRequest")
-      .header("Content-Type", "application/x-www-form-urlencoded")
+    d3.request('/vendor')
+      .header('X-Requested-With', 'XMLHttpRequest')
+      .header('Content-Type', 'application/x-www-form-urlencoded')
       .post(`email=${this.state.email}&password=${this.state.password}&name=${this.state.name}`, (err, data) => {
-        console.log('register returned');
-        console.log(data);
-
-        if(err != null) {
+        if (err != null) {
           window.alert('registeration failure with:')
           this.props.finish();
         }
         console.log(data.response)
         const parsedMessage = JSON.parse(data.response);
         console.log(parsedMessage)
-        if (parsedMessage.status == "success") {
+        if (parsedMessage.status === 'success') {
           window.alert('register successful');
           this.props.finish();
         } else {
@@ -105,4 +104,4 @@ class Register extends React.Component {
   }
 }
 
-module.exports = Register
+module.exports = Register;

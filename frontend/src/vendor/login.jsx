@@ -1,13 +1,16 @@
-import React from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-const d3 = require("d3");
+/* eslint-env browser */
+const React = require('react');
+const {
+  Button, FormGroup, FormControl, ControlLabel,
+} = require('react-bootstrap');
+const d3 = require('d3');
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: ""
+      email: '',
+      password: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -19,23 +22,21 @@ class Login extends React.Component {
 
   handleChange(event) {
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
     });
-  };
+  }
 
   handleSubmit(event) {
-    d3.request("/auth/login")
-      .header("X-Requested-With", "XMLHttpRequest")
-      .header("Content-Type", "application/x-www-form-urlencoded")
+    d3.request('/auth/login')
+      .header('X-Requested-With', 'XMLHttpRequest')
+      .header('Content-Type', 'application/x-www-form-urlencoded')
       .post(`email=${this.state.email}&password=${this.state.password}`, (res) => {
         if (res == null) {
-          window.alert('incorrect credentials')
-          return
+          window.alert('incorrect credentials');
+          return;
         }
-        console.log(res);
         const parsedMessage = JSON.parse(res.response);
-        console.log(parsedMessage)
-        if (parsedMessage.status == "success") {
+        if (parsedMessage.status === 'success') {
           this.props.onUserLogin(parsedMessage.auth_token, parsedMessage.vendor_id);
           document.cookie = JSON.stringify({
             login: parsedMessage.auth_token,
@@ -82,4 +83,4 @@ class Login extends React.Component {
   }
 }
 
-module.exports = Login
+module.exports = Login;
