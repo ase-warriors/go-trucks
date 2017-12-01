@@ -1,10 +1,10 @@
-# ASE Toy Project
+# Go Trucks Frontend
 
 ## Build Status
 [![Build Status](https://travis-ci.org/ase-warriors/toyproject.svg?branch=master)](https://travis-ci.org/ase-warriors/toyproject)
 
 ## Description
-This is a toy project demonstrating the technology framework we are going to use for our final project. We added continuous integration with Travis-CI.
+This is the frontend codebase for Go Trucks. We added continuous integration with Travis-CI.
 
 ## Building and Testing
 ### Build the frontend and backend
@@ -14,14 +14,11 @@ npm run-script build
 ```
 
 ### Run the backend
-```bash
-./install_db.sh
-npm run-script run
-```
+Please run the backend according to the backend's README instructions.
 
-### Unit test
+### Unit test over a headless browser
 ```bash
-./unit_test.sh
+npm test
 ```
 
 ### Frontend
@@ -30,15 +27,6 @@ npm run-script run
 * webpack
 * babel-es2015 & babel-react
 * d3.js
-
-### Backend (for test-only)
-* nodejs (6)
-* express
-* pg
-* postgreSQL
-
-The actual backend we are going to use is:
-https://github.com/AmyJiang/ase_backend
 
 ## Authors
 Andy Xu (lx2180)
