@@ -201,7 +201,7 @@ class Create extends React.Component {
           <p>{this.state.profile.registered_on}</p>
         </Well>
       );
-      [name] = this.state.profile;
+      name = this.state.profile.name;
     }
 
     return (
