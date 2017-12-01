@@ -1,18 +1,22 @@
-import React from "react";
-import { Tooltip, Popover, OverlayTrigger, Well, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+/* eslint-env browser */
+const React = require('react');
+const {
+  Tooltip, OverlayTrigger, Well, Button, FormGroup, FormControl, ControlLabel,
+} = require('react-bootstrap');
 
-const d3 = require("d3");
-const PlacesWithStandaloneSearchBox = require("./searchbox.jsx");
-const CurrentMap = require("./vendor_map.jsx");
+const d3 = require('d3');
+const PlacesWithStandaloneSearchBox = require('./searchbox.jsx');
+const CurrentMap = require('./vendor_map.jsx');
 
 function FieldGroup(props) {
-  const {id, type, label, placeholder, onChange} = props;
+  const {
+    id, type, label, placeholder, onChange,
+  } = props;
   return (
     <FormGroup controlId={id}>
       <ControlLabel>{label}</ControlLabel>
-      <FormControl type={type} placeholder={placeholder} onChange={onChange}/>
-    </FormGroup>)
-  ;
+      <FormControl type={type} placeholder={placeholder} onChange={onChange} />
+    </FormGroup>);
 }
 
 class Create extends React.Component {
@@ -20,12 +24,12 @@ class Create extends React.Component {
     super(props);
     this.state = {
       profile: null,
-      location: "",
+      location: '',
       lng: -73.9625727,
       lat: 40.8075355,
-      time:"",
-      post:null,
-      menu:"",
+      time: '',
+      post: null,
+      menu: '',
     }; // defaults to Columbia
     this.handleChange = this.handleChange.bind(this);
     this.onClickSubmit = this.onClickSubmit.bind(this);
@@ -36,44 +40,34 @@ class Create extends React.Component {
   }
   componentDidMount() {
     this.getPosts();
-    this.getProfile()
+    this.getProfile();
   }
   onClickSubmit(event) {
     d3.request(`/vendor/${this.props.vendorID}/post`)
-      .header("X-Requested-With", "XMLHttpRequest")
-      .header("Content-Type", "application/x-www-form-urlencoded")
-      .header("Authorization", this.props.token)
+      .header('X-Requested-With', 'XMLHttpRequest')
+      .header('Content-Type', 'application/x-www-form-urlencoded')
+      .header('Authorization', this.props.token)
       .post(`location=${this.state.location}&time=${this.state.time}&lat=${this.state.lat}&lng=${this.state.lng}&menu=${this.state.menu}`, (res) => {
-        console.log(res.response)
         const parsedMessage = JSON.parse(res.response);
-        console.log(parsedMessage)
-        if (parsedMessage.status == "success") {
-          window.alert('Post Successful!')
+        if (parsedMessage.status === 'success') {
+          window.alert('Post Successful!');
           this.getPosts();
           this.getProfile();
         } else {
-          window.alert('Post Failed!')
+          window.alert('Post Failed!');
         }
       });
-
     event.preventDefault();
   }
-  handleChange(event) {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
-  };
+
   getProfile() {
-    console.log('getProfile called');
     d3.request(`/vendor/${this.props.vendorID}`)
-      .header("X-Requested-With", "XMLHttpRequest")
-      .header("Content-Type", "application/x-www-form-urlencoded")
-      .header("Authorization", this.props.token)
+      .header('X-Requested-With', 'XMLHttpRequest')
+      .header('Content-Type', 'application/x-www-form-urlencoded')
+      .header('Authorization', this.props.token)
       .get((res) => {
-        console.log("getProfile got get response");
         const parsedMessage = JSON.parse(res.response);
         if (parsedMessage) {
-          console.log("vendor profile" + JSON.stringify(parsedMessage));
           this.setState({
             profile: parsedMessage,
           });
@@ -84,13 +78,11 @@ class Create extends React.Component {
   }
   getPosts() {
     d3.request(`/vendor/${this.props.vendorID}/post`)
-      .header("X-Requested-With", "XMLHttpRequest")
-      .header("Content-Type", "application/x-www-form-urlencoded")
-      .header("Authorization", this.props.token)
+      .header('X-Requested-With', 'XMLHttpRequest')
+      .header('Content-Type', 'application/x-www-form-urlencoded')
+      .header('Authorization', this.props.token)
       .get((res) => {
-        console.log(res.response)
         const parsedMessage = JSON.parse(res.response);
-        console.log(parsedMessage)
         if (parsedMessage && parsedMessage.length > 0) {
           this.setState({
             post: parsedMessage,
@@ -103,16 +95,12 @@ class Create extends React.Component {
         }
       });
   }
-  notifyCoordinates(co) {
-    console.log('notified!');
-    console.log(co);
-    const flat = parseFloat(co.geometry.location.lat());
-    const flng = parseFloat(co.geometry.location.lng());
-    this.setState({
-      lng: flng,
-      lat: flat,
-      location: co.formatted_address,
-    });
+
+  getSelectedCoordinates() {
+    if (this.state.lng === 0.0 && this.state.lat === 0.0) {
+      return 'N/A';
+    }
+    return `(${this.state.lng.toFixed(3)},${this.state.lat.toFixed(3)})`;
   }
 
   notifyCoordinatesFromMap(flat, flng) {
@@ -122,15 +110,33 @@ class Create extends React.Component {
     });
   }
 
-  getSelectedCoordinates() {
-    if (this.state.lng === 0.0 && this.state.lat === 0.0) {
-      return 'N/A';
-    } else {
-      return `(${this.state.lng.toFixed(3)},${this.state.lat.toFixed(3)})`;
-    }
+
+  notifyCoordinates(co) {
+    const flat = parseFloat(co.geometry.location.lat());
+    const flng = parseFloat(co.geometry.location.lng());
+    this.setState({
+      lng: flng,
+      lat: flat,
+      location: co.formatted_address,
+    });
   }
+
+
+  handleChange(event) {
+    this.setState({
+      [event.target.id]: event.target.value,
+    });
+  }
+
   render() {
-    const selectMap = (<CurrentMap centerLatitude={this.state.lat} centerLongitude={this.state.lng} draggable={true} notifyCoordinatesFromMap={this.notifyCoordinatesFromMap}/>);
+    const selectMap = (
+      <CurrentMap
+        centerLatitude={this.state.lat}
+        centerLongitude={this.state.lng}
+        draggable
+        notifyCoordinatesFromMap={this.notifyCoordinatesFromMap}
+      />
+    );
 
     const hoverOverSubmit = (
       <Tooltip id="tooltip">
@@ -139,16 +145,16 @@ class Create extends React.Component {
     );
 
     const formInstance = (
-      <form onSubmit = {this.onClickSubmit}>
+      <form onSubmit={this.onClickSubmit}>
         <FieldGroup
           id="time"
-          label={`Enter Schedule (expected hours)*`}
-          placeholder={'e.g. 12pm to 5pm'}
+          label="Enter Schedule (expected hours)*"
+          placeholder="e.g. 12pm to 5pm"
           onChange={this.handleChange}
-          />
+        />
         <label className="control-label">Enter Posting Location</label>
         <div id="address-validation">
-          <PlacesWithStandaloneSearchBox notifyCoordinates = {this.notifyCoordinates}/>
+          <PlacesWithStandaloneSearchBox notifyCoordinates={this.notifyCoordinates} />
           {selectMap}
         </div>
         <FieldGroup
@@ -156,24 +162,24 @@ class Create extends React.Component {
           label="Enter Descriptions (special menu, etc.)"
           onChange={this.handleChange}
           placeholder={this.state.menu}
-          />
+        />
         <FormGroup>
           <OverlayTrigger placement="top" overlay={hoverOverSubmit}>
-          <Button type="submit" disabled={this.state.lng==0.0 || this.state.time===""}>
+            <Button type="submit" disabled={this.state.lng === 0.0 || this.state.time === ''}>
             Submit
-          </Button>
+            </Button>
           </OverlayTrigger>
         </FormGroup>
       </form>
     );
-    var currentPost = (
-        <Well>
-          <p>Last Posting Location: N/A</p>
-          <p>Last Posting Time: N/A</p>
-          <p>Last Posting Menu: N/A</p>
-        </Well>);
+    let currentPost = (
+      <Well>
+        <p>Last Posting Location: N/A</p>
+        <p>Last Posting Time: N/A</p>
+        <p>Last Posting Menu: N/A</p>
+      </Well>);
 
-    if (this.state.post !== null && this.state.post.length > 0){
+    if (this.state.post !== null && this.state.post.length > 0) {
       currentPost = (
         <Well>
           <h4>Last Posting Location</h4>
@@ -184,18 +190,18 @@ class Create extends React.Component {
           <p>{this.state.post[0].menu}</p>
         </Well>);
     }
-
-    var profileBlock = null;
-    var name="";
+    let profileBlock = null;
+    let name = '';
     if (this.state.profile != null) {
-      profileBlock =
-        (<Well>
-         <h4>Email</h4>
-         <p>{this.state.profile.email}</p>
-         <h4>Registered on</h4>
-         <p>{this.state.profile.registered_on}</p>
-         </Well>);
-      name=this.state.profile.name
+      profileBlock = (
+        <Well>
+          <h4>Email</h4>
+          <p>{this.state.profile.email}</p>
+          <h4>Registered on</h4>
+          <p>{this.state.profile.registered_on}</p>
+        </Well>
+      );
+      [name] = this.state.profile;
     }
 
     return (
@@ -204,7 +210,7 @@ class Create extends React.Component {
         {profileBlock}
         <h2>Current Posting</h2>
         <div id="current-posting">
-             {currentPost}
+          {currentPost}
         </div>
         <h2>Create Posting</h2>
         <div>{formInstance}</div>
