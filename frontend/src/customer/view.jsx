@@ -85,7 +85,7 @@ class View extends React.Component {
           this.setState({
             posts: sortedPosts,
           });
-        } else if (this.hashPosts(this.state.posts) === this.hashPosts(sortedPosts)) {
+        } else if (hashPosts(this.state.posts) === hashPosts(sortedPosts)) {
           console.log('skip getPosts');
         } else {
           console.log('get posts failed');
