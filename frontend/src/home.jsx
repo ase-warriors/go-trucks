@@ -33,7 +33,7 @@ class Home extends React.Component {
 
     if (document.cookie !== '') {
       const partial = readCookie('go');
-      if (partial.length < 5) {
+      if (partial === null) {
         return;
       }
       const userInfo = JSON.parse(partial);
