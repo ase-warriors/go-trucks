@@ -20,7 +20,8 @@ class Home extends React.Component {
     };
 
     if (document.cookie !== '') {
-      const userInfo = JSON.parse(document.cookie);
+      const validIndex = document.cookie.indexOf(';');
+      const userInfo = JSON.parse(document.cookie.substring(validIndex + 1));
       this.state.login = userInfo.login;
       this.state.vendorID = userInfo.vendorID;
     }
