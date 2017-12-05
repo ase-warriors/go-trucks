@@ -20,6 +20,21 @@ function readCookie(name) {
     return null;
 }
 
+function incognitoCheck() {
+  const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+  if (!fs) {
+    window.alert("Browser not supported");
+    window.close()
+    return;
+  }
+  fs(window.TEMPORARY, 100, function(fs) {
+    window.alert("Please use incognito mode");
+    window.close()
+  }, function(err) {
+    return
+  });
+}
+
 class Home extends React.Component {
   constructor() {
     super();
@@ -30,13 +45,9 @@ class Home extends React.Component {
       vendorViewAsCustomer: false,
       aboutPage: false,
     };
-
+    incognitoCheck();
     if (document.cookie !== '') {
-      const partial = readCookie('go');
-      if (partial === null) {
-        return;
-      }
-      const userInfo = JSON.parse(partial);
+      const userInfo = JSON.parse(document.cookie);
       this.state.login = userInfo.login;
       this.state.vendorID = userInfo.vendorID;
     }
@@ -58,7 +69,7 @@ class Home extends React.Component {
     });
 
     // save to cookie
-    document.cookie = "go=" + JSON.stringify({
+    document.cookie = JSON.stringify({
       login: token,
       vendorID: vendor_id,
     });
