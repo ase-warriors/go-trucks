@@ -26,6 +26,7 @@ class Home extends React.Component {
         return;
       }
       const userInfo = JSON.parse(partial);
+      console.log(`partial:${partial}`);
       this.state.login = userInfo.login;
       this.state.vendorID = userInfo.vendorID;
     }
