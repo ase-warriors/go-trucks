@@ -8,6 +8,18 @@ const MyNavbar = require('./mynavbar.jsx');
 const About = require('./about.jsx');
 const d3 = require('d3');
 
+function readCookie(name) {
+  // ref: https://stackoverflow.com/questions/5639346/what-is-the-shortest-function-for-reading-a-cookie-by-name-in-javascript
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 class Home extends React.Component {
   constructor() {
     super();
@@ -20,8 +32,7 @@ class Home extends React.Component {
     };
 
     if (document.cookie !== '') {
-      const validIndex = document.cookie.indexOf(';');
-      const partial = document.cookie.substring(validIndex + 1);
+      const partial = readCookie('go');
       if (partial.length < 5) {
         return;
       }
@@ -47,7 +58,7 @@ class Home extends React.Component {
     });
 
     // save to cookie
-    document.cookie = JSON.stringify({
+    document.cookie = "go=" + JSON.stringify({
       login: token,
       vendorID: vendor_id,
     });
