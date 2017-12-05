@@ -15,9 +15,9 @@ $ cd ase_backend/
 $ pip install -r requirements.txt
 
 # Create PostgreSQL database (first time)
-$ psql -c ‘create database foodtracker_dev;’ -U postgres
-$ psql -d foodtracker_dev -c ‘create extension cube;’ -U postgres
-$ psql -d foodtracker_dev -c ‘create extension earthdistance;’ -U postgres
+$ psql -c 'create database foodtracker_dev;' -U postgres
+$ psql -d foodtracker_dev -c 'create extension cube;' -U postgres
+$ psql -d foodtracker_dev -c 'create extension earthdistance;' -U postgres
 $ python manager.py create_db
 
 # Run server
