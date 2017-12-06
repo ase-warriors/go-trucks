@@ -7,10 +7,16 @@
 This is the frontend codebase for Go Trucks. We added continuous integration with Travis-CI.
 
 ## Building and Testing
-### Build the frontend and backend
+### Build the frontend for development
 ```bash
 npm install
-npm run-script build
+npm run build
+```
+
+### Build the frontend for production
+```bash
+npm install
+npm run compile
 ```
 
 ### Run the backend
