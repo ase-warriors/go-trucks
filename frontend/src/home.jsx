@@ -1,4 +1,5 @@
 /* eslint-env browser */
+const Cookies = require('universal-cookie');
 const React = require('react');
 const Login = require('./vendor/login.jsx');
 const Create = require('./vendor/create.jsx');
@@ -8,32 +9,6 @@ const MyNavbar = require('./mynavbar.jsx');
 const About = require('./about.jsx');
 const d3 = require('d3');
 
-function readCookie(name) {
-  // ref: https://stackoverflow.com/questions/5639346/what-is-the-shortest-function-for-reading-a-cookie-by-name-in-javascript
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-}
-
-function incognitoCheck() {
-  const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
-  if (!fs) {
-    window.alert("Browser not supported");
-    window.close()
-    return;
-  }
-  fs(window.TEMPORARY, 100, function(fs) {
-    window.alert("Please use incognito mode");
-    window.close()
-  }, function(err) {
-    return
-  });
-}
 
 class Home extends React.Component {
   constructor() {
@@ -45,9 +20,10 @@ class Home extends React.Component {
       vendorViewAsCustomer: false,
       aboutPage: false,
     };
-    incognitoCheck();
-    if (document.cookie !== '') {
-      const userInfo = JSON.parse(document.cookie);
+    this.cookies = new Cookies();
+    const userInfo = this.cookies.get('user');
+    if (userInfo !== undefined) {
+      console.log(userInfo);
       this.state.login = userInfo.login;
       this.state.vendorID = userInfo.vendorID;
     }
@@ -69,10 +45,11 @@ class Home extends React.Component {
     });
 
     // save to cookie
-    document.cookie = JSON.stringify({
+    const userInfo = {
       login: token,
       vendorID: vendor_id,
-    });
+    };
+    this.cookies.set('user', userInfo);
   }
 
   onClickToggleVendorViewAsCustomer() {
@@ -98,7 +75,7 @@ class Home extends React.Component {
       .post('', (res) => {
         if (res == null) {
           window.alert('logout failure');
-          document.cookie = ''; // clear anyways
+          this.cookies.remove('user');
           return;
         }
         const parsedMessage = JSON.parse(res.response);
@@ -108,7 +85,7 @@ class Home extends React.Component {
                 vendorID: '',
               });
           // clean the cookie
-          document.cookie = ''
+          this.cookies.remove('user');
           window.alert('You have logged out');
         }
       });
