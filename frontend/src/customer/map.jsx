@@ -58,6 +58,7 @@ const MapWithAMarkerClusterer = compose(
       averageCenter
       enableRetinaIcons
       gridSize={60}
+      defaultMinimumClusterSize={10}
     >
           {props.markers.map((marker,i) => (
         <Marker
