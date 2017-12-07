@@ -4,9 +4,11 @@ notifications:
             - rj2394@columbia.edu
             - lx2180@columbia.edu
         on_success: never
-        on_failure: always
+        on_failure: never
 
 language: node_js
+
+sudo: true
 
 node_js:
   - "6"
