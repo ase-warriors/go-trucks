@@ -1,6 +1,15 @@
-.Login, .Register, .Create, .About{
+.Login, .Register, .Create {
   margin: 0 auto;
   max-width: 600px;
+}
+.About {
+  margin: 50px auto;
+  max-width: 800px;
+}
+
+.About .jumbotron {
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .Login, .Register, .Create, .Start {

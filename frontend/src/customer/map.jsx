@@ -6,6 +6,7 @@ const {
   withGoogleMap,
   GoogleMap,
   Marker,
+  Circle,
 } = require("react-google-maps");
 
 const { InfoBox } = require("react-google-maps/lib/components/addons/InfoBox");
@@ -49,13 +50,15 @@ const MapWithAMarkerClusterer = compose(
       defaultZoom={15}
       defaultCenter={{ lat: props.centerLatitude, lng: props.centerLongitude}}
       center={{ lat: props.centerLatitude, lng: props.centerLongitude}}
-   >
+    >
+      <Circle center={{lat: props.centerLatitude, lng: props.centerLongitude}} radius={props.circleRadius}/>
     {currentLocationMarker}
     <MarkerClusterer
       onClick={props.onMarkerClustererClick}
       averageCenter
       enableRetinaIcons
       gridSize={60}
+      defaultMinimumClusterSize={10}
     >
           {props.markers.map((marker,i) => (
         <Marker

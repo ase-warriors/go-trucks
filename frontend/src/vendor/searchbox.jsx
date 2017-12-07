@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-env browser */
+const React = require('react');
 const { compose, withProps, lifecycle } = require("recompose");
 const {
   withScriptjs,
