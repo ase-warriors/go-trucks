@@ -2,6 +2,7 @@ notifications:
     email:
         recipients:
             - rj2394@columbia.edu
+            - lx2180@columbia.edu
         on_success: never
         on_failure: always
 
