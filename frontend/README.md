@@ -1,8 +1,5 @@
 # Go Trucks Frontend
 
-## Build Status
-[![Build Status](https://travis-ci.org/ase-warriors/toyproject.svg?branch=master)](https://travis-ci.org/ase-warriors/toyproject)
-
 ## Description
 This is the frontend codebase for Go Trucks. We added continuous integration with Travis-CI.
 

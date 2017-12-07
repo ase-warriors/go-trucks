@@ -2,8 +2,6 @@ FoodTracker Backend
 ===========================
 Project for ASE, Fall 2017
 
-![CI](https://travis-ci.org/ase-warriors/go-trucks.svg?branch=master)
-
 ## Setup and Run Server
 
 Prerequisite: python-2.7, pip, postgresql
