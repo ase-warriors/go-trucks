@@ -33,7 +33,7 @@ matrix:
         - cd frontend; npm install
 
       script:
-        - npm run compile
+        - npm run buildonce
 
 notifications:
     email:
