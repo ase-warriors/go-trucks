@@ -1,3 +1,43 @@
+matrix:
+  include:
+    - language: python
+      python: 2.7
+
+      service:
+        - postgresql
+
+      before_install:
+        - export APP_SETTINGS="server.config.TestingConfig"
+
+      install:
+        - pip install -r backend/requirements.txt
+        - cd frontend
+        - npm install
+
+      before_script:
+        - psql -c 'create database foodtracker_test;' -U postgres
+        - psql -d foodtracker_test -c 'create extension cube;' -U postgres
+        - psql -d foodtracker_test -c 'create extension earthdistance;' -U postgres
+        - python backend/manager.py create_db
+
+      script:
+        - cd backend; ./presubmit.sh
+        - cd ../frontend; npm run compile
+
+      after_failure:
+        - git diff --name-only
+        - git diff
+
+    - language: node_js
+
+      node_js: 6
+
+      install:
+        - cd frontend; npm install
+
+      script:
+        - cd frontend; npm run compile
+
 notifications:
     email:
         recipients:
@@ -5,36 +45,3 @@ notifications:
             - lx2180@columbia.edu
         on_success: never
         on_failure: never
-
-language: node_js
-
-sudo: true
-
-node_js:
-  - "6"
-
-service:
-  - postgresql
-
-before_install:
-  - export APP_SETTINGS="server.config.TestingConfig"
-
-install:
-  - pip install -r backend/requirements.txt
-  - cd frontend
-  - npm install
-
-before_script:
-  - psql -c 'create database foodtracker_test;' -U postgres
-  - psql -d foodtracker_test -c 'create extension cube;' -U postgres
-  - psql -d foodtracker_test -c 'create extension earthdistance;' -U postgres
-  - python backend/manager.py create_db
-
-script:
-  - cd backend; ./presubmit.sh
-  - cd ../frontend; npm run compile
-
-after_failure:
-  - git diff --name-only
-  - git diff
-
