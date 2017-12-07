@@ -6,10 +6,10 @@ notifications:
         on_success: never
         on_failure: always
 
-language: python
+language: node_js
 
-python:
-  - "2.7"
+node_js:
+  - "6"
 
 service:
   - postgresql
@@ -19,6 +19,8 @@ before_install:
 
 install:
   - pip install -r backend/requirements.txt
+  - cd frontend
+  - npm install
 
 before_script:
   - psql -c 'create database foodtracker_test;' -U postgres
@@ -28,6 +30,7 @@ before_script:
 
 script:
   - cd backend; ./presubmit.sh
+  - cd ../frontend; npm run compile
 
 after_failure:
   - git diff --name-only
