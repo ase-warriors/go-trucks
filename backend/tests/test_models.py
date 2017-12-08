@@ -1,7 +1,6 @@
 
 import unittest
 
-from server import db
 from server.models import Vendor, Post
 from tests.base import BaseTestCase
 

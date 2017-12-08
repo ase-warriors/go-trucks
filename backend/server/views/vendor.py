@@ -3,7 +3,6 @@
 from flask import Blueprint, jsonify, request, make_response
 from flask.views import MethodView
 from server.models import Vendor, Post
-from server import app
 
 vendor_bp = Blueprint('vendor', __name__, url_prefix="/vendor")
 

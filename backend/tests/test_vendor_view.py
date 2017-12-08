@@ -1,5 +1,3 @@
-import ast
-import json
 import unittest
 from server.models import Vendor, Post
 from tests.base import BaseTestCase

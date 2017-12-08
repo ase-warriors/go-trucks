@@ -1,9 +1,9 @@
 # server/models/post.py
 
 import datetime
-from server import app, db
+from server import db
 from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
-from sqlalchemy.sql import func, label
+from sqlalchemy.sql import func
 from server.models import Vendor
 
 

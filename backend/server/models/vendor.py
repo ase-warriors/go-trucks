@@ -3,7 +3,6 @@
 import datetime
 import jwt
 from server import app, db, bcrypt
-from server.models.token import BlacklistToken
 
 
 class Vendor(db.Model):

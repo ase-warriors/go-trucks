@@ -3,7 +3,6 @@
 from flask import Blueprint, jsonify, request, make_response
 from flask.views import MethodView
 from server.models import Post
-from server import app
 
 post_bp = Blueprint('post', __name__, url_prefix="/post")
 
