@@ -3,7 +3,6 @@
 from flask import Blueprint, jsonify, request, make_response
 from flask.views import MethodView
 from server.models import Post
-from server import app
 
 post_bp = Blueprint('post', __name__, url_prefix="/post")
 
@@ -45,7 +44,7 @@ class PostsAPI(MethodView):
                 "lng": p.lng,
                 "time": p.time
             })
-            if p.menu:
+            if p.menu is not None:
                 res[-1]["menu"] = p.menu
 
         return json_response(res, 200)

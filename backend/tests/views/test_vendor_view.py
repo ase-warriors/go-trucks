@@ -1,8 +1,7 @@
-import ast
-import json
 import unittest
 from server.models import Vendor, Post
 from tests.base import BaseTestCase
+from mock import patch
 
 def get_test_post_form():
     return dict(location="Columbia University, New York",
@@ -12,7 +11,6 @@ def get_test_post_form():
                 menu="pizza $3")
 
 class TestVendorBlueprint(BaseTestCase):
-
     def test_get_vendors(self):
         Vendor.add_vendor(dict(email="test1@gmail.com",
                                password="test1", name="vendor1"))
@@ -22,6 +20,11 @@ class TestVendorBlueprint(BaseTestCase):
             response = self.client.get("/vendor")
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(response.json), 2)
+
+    def test_get_vendors_failed(self):
+        with self.client:
+            response = self.client.get("/vendor")
+            self.assertEqual(response.status_code, 402)
 
     def test_registration(self):
         with self.client:
@@ -35,6 +38,16 @@ class TestVendorBlueprint(BaseTestCase):
         with self.client:
             response = self.register_vendor(v.email, "pwd", 'vendor')
             self.assertEqual(response.status_code, 202)
+
+
+    def test_registration_failed(self):
+        with self.client:
+            response = self.client.post(
+                "/vendor",
+                data=dict(email="test@gmail.com", password="pwd"))
+
+            self.assertEqual(response.status_code, 401)
+
 
 
     def test_add_post(self):
@@ -55,6 +68,10 @@ class TestVendorBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 401)
 
             response = self.add_vendor_post(vendor.id, form, None)
+            self.assertEqual(response.status_code, 401)
+
+            del form["lat"]
+            response = self.add_vendor_post(vendor.id, form, vendor.encode_auth_token())
             self.assertEqual(response.status_code, 401)
 
 
@@ -99,6 +116,14 @@ class TestVendorBlueprint(BaseTestCase):
             response = self.get_vendor_post(vendor.id, -1)
             self.assertEqual(response.status_code, 400)
 
+    @patch("server.models.Post.get_latest_post")
+    def test_get_post_error(self, mock_get_latest_post):
+        mock_get_latest_post.return_value = None
+        with self.client:
+            response = self.get_vendor_post(1, 2)
+            self.assertEqual(response.status_code, 404)
+
+
 
     def test_get_post_unauthorized(self):
         vendor = Vendor.add_vendor(dict(email="test1@gmail.com",
@@ -119,8 +144,17 @@ class TestVendorBlueprint(BaseTestCase):
             self.assertEqual(response.json[0].get("menu"), form["menu"])
             self.assertEqual(response.json[0], form)
 
+    def test_get_vendor_info(self):
+        v = Vendor.add_vendor(dict(email="test1@gmail.com",
+                                   password="test1", name="vendor1"))
+        with self.client:
+            response = self.client.get("/vendor/" + str(v.id))
+            self.assertEqual(response.status_code, 200)
 
-
+    def test_get_vendor_info_failed(self):
+        with self.client:
+            response = self.client.get("/vendor/100")
+            self.assertEqual(response.status_code, 404)
 
     def register_vendor(self, email, password, name):
         return self.client.post(

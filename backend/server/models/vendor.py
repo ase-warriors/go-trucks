@@ -3,7 +3,6 @@
 import datetime
 import jwt
 from server import app, db, bcrypt
-from server.models.token import BlacklistToken
 
 
 class Vendor(db.Model):
@@ -65,4 +64,4 @@ class Vendor(db.Model):
             return jwt.encode(
                 payload, app.config.get('SECRET_KEY'), algorithm='HS256')
         except Exception as e:
-            return e
+            return None

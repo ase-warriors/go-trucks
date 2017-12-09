@@ -1,9 +1,9 @@
 # server/models/post.py
 
 import datetime
-from server import app, db
+from server import db
 from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
-from sqlalchemy.sql import func, label
+from sqlalchemy.sql import func
 from server.models import Vendor
 
 
@@ -72,7 +72,7 @@ class Post(db.Model):
         latest_posts = db.session.query(subquery).filter(
             subquery.c.max == subquery.c.posted_on)
 
-        if distance == None:
+        if distance is None:
             return latest_posts.all()
 
         loc = func.ll_to_earth(lat, lng)

@@ -1,30 +1,27 @@
 from server.models import BlacklistToken
-from server import app, db
+from server import app
 import jwt
 
 
 class AuthPolicy(object):
     def __init__(self, app):
-        self.app = app
+        self._app = app
 
     def __call__(self, environ, start_response):
         unkown_policy = {"role": "unknown"}
         auth_header = environ.get("HTTP_AUTHORIZATION", "")
         # app.logger.debug("header=%s", auth_header)
         if auth_header:
-            try:
-                auth_token = auth_header.split(" ")[0]
-                if auth_token:
-                    resp = AuthPolicy.decode_auth_token(auth_token)
-                    if not isinstance(resp, str):
-                        policy = {"role": "vendor", "vendor_id": resp}
-                        # app.logger.debug("policy=%s", policy)
-                        environ["policy"] = policy
-                        return self.app(environ, start_response)
-            except IndexError:
-                pass
+            auth_token = auth_header.split(" ")[0]
+            resp = AuthPolicy.decode_auth_token(auth_token)
+            if not isinstance(resp, str):
+                policy = {"role": "vendor", "vendor_id": resp}
+                # app.logger.debug("policy=%s", policy)
+                environ["policy"] = policy
+                return self._app(environ, start_response)
+
         environ["policy"] = unkown_policy
-        return self.app(environ, start_response)
+        return self._app(environ, start_response)
 
     @staticmethod
     def decode_auth_token(auth_token):
@@ -32,6 +29,8 @@ class AuthPolicy(object):
         # TODO(amy): change to error not string
         try:
             payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+            if 'sub' not in payload:
+                return 'Invalid Token'
             is_blacklisted = BlacklistToken.check_blacklist(auth_token)
             if is_blacklisted:
                 return 'Token blacklisted. Please log in again.'
