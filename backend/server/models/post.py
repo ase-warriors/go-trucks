@@ -72,7 +72,7 @@ class Post(db.Model):
         latest_posts = db.session.query(subquery).filter(
             subquery.c.max == subquery.c.posted_on)
 
-        if distance == None:
+        if distance is None:
             return latest_posts.all()
 
         loc = func.ll_to_earth(lat, lng)

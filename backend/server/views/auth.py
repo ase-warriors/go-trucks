@@ -19,7 +19,7 @@ class LoginAPI(MethodView):
             user = Vendor.get_vendor_by_email(email)
             if user and bcrypt.check_password_hash(user.password, password):
                 auth_token = user.encode_auth_token()
-                if auth_token:
+                if auth_token is not None:
                     res = {
                         'status': 'success',
                         'message': 'Successfully logged in.',
@@ -27,6 +27,9 @@ class LoginAPI(MethodView):
                         'vendor_id': user.id
                     }
                     return make_response(jsonify(res)), 200
+                else:
+                    res = {'status': 'failure', 'message': 'Try again'}
+                    return make_response(jsonify(res)), 500
             else:
                 res = {'status': 'failure', 'message': 'User does not exist.'}
                 return make_response(jsonify(res)), 404
@@ -60,7 +63,7 @@ class LogoutAPI(MethodView):
                     return make_response(jsonify(res)), 200
                 except Exception as e:
                     res = {'status': 'failure', 'message': e}
-                    return make_response(jsonify(res)), 200
+                    return make_response(jsonify(res)), 500
             else:
                 res = {'status': 'failure', 'message': resp}
                 return make_response(jsonify(res)), 401
@@ -77,4 +80,3 @@ logout_view = LogoutAPI.as_view('logout_api')
 
 auth_bp.add_url_rule('/auth/login', view_func=login_view, methods=['POST'])
 auth_bp.add_url_rule('/auth/logout', view_func=logout_view, methods=['POST'])
-# auth_bp.add_url_rule('/auth/status', view_func=user_view, methods=['GET'])

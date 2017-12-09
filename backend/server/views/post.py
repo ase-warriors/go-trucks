@@ -44,7 +44,7 @@ class PostsAPI(MethodView):
                 "lng": p.lng,
                 "time": p.time
             })
-            if p.menu:
+            if p.menu is not None:
                 res[-1]["menu"] = p.menu
 
         return json_response(res, 200)
