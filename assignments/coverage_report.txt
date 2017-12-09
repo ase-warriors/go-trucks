@@ -1,0 +1,54 @@
+test_add_post (models.test_post_model.TestPostModel) ... ok
+test_add_post_failed (models.test_post_model.TestPostModel) ... ok
+test_get_latest_post (models.test_post_model.TestPostModel) ... ok
+test_get_post_list (models.test_post_model.TestPostModel) ... ok
+test_get_post_list_all (models.test_post_model.TestPostModel) ... ok
+test_add_vendor (models.test_vendor_model.TestVendorModel) ... ok
+test_get_vendor (models.test_vendor_model.TestVendorModel) ... ok
+test_get_vendor_list (models.test_vendor_model.TestVendorModel) ... ok
+test_add_token (models.test_token_model.TestTokenModel) ... ok
+test_add_post (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_add_post_failed (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_get_post_authorized (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_get_post_empty (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_get_post_error (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_get_post_invalid_args (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_get_post_unauthorized (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_get_vendor_info (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_get_vendor_info_failed (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_get_vendors (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_get_vendors_failed (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_registration (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_registration_failed (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_repeated_registration (views.test_vendor_view.TestVendorBlueprint) ... ok
+test_failed_login (views.test_auth_view.TestAuthBlueprint) ... ok
+test_failed_login2 (views.test_auth_view.TestAuthBlueprint) ... ok
+test_failed_login3 (views.test_auth_view.TestAuthBlueprint) ... ok
+test_failed_logout (views.test_auth_view.TestAuthBlueprint) ... ok
+test_successful_login (views.test_auth_view.TestAuthBlueprint) ... ok
+test_successful_logout (views.test_auth_view.TestAuthBlueprint) ... ok
+test_get_post_failed (views.test_post_view.TestPostBlueprint) ... ok
+test_get_post_failed2 (views.test_post_view.TestPostBlueprint) ... ok
+test_get_post_list (views.test_post_view.TestPostBlueprint) ... ok
+test_decode_token (test_middleware.TestAuthPolicy) ... ok
+test_decode_token_blacklisted (test_middleware.TestAuthPolicy) ... ok
+test_decode_token_expired (test_middleware.TestAuthPolicy) ... ok
+test_decode_token_failed (test_middleware.TestAuthPolicy) ... ok
+
+----------------------------------------------------------------------
+Ran 36 tests in 4.453s
+
+OK
+
+Coverage Summary:
+Name                      Stmts   Miss Branch BrPart  Cover
+-----------------------------------------------------------
+server/middleware.py         31      8     10      0    80%
+server/models/post.py        47     20      4      0    61%
+server/models/token.py       17     11      2      0    42%
+server/models/vendor.py      39     19      0      0    51%
+server/views/auth.py         52     17     10      0    73%
+server/views/post.py         31      9      8      1    74%
+server/views/vendor.py       71     16     24      1    82%
+-----------------------------------------------------------
+TOTAL                       288    100     58      2    71%
