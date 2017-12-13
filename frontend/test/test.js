@@ -50,7 +50,7 @@ describe('Testing Go Trucks as a vendor', function () {
       .evaluate(() => document.querySelector('div.Register form').children.length)
       .end()
       .then(result => {
-        expect(result).to.equal(4)
+        expect(result).to.equal(5)
         done();
       })
       .catch(done);
@@ -128,7 +128,7 @@ describe('Testing Go Trucks as a customer', function () {
       .evaluate(() => document.querySelector('#post-list-table table thead tr th').innerHTML)
       .end()
       .then((content) => {
-        expect(content).to.equal('Vendor #');
+        expect(content).to.equal('Results');
         done();
       })
       .catch(done);
